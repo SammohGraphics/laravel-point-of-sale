@@ -23,7 +23,7 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header bg-white">
-                                        <h3 class="modal-title text-center mx-auto">Invoice of {{ $customer->name }}<br/>Total Amount ${{ Cart::total() }}</h3>
+                                        <h3 class="modal-title text-center mx-auto">Invoice of {{ $customer->name }}<br/>Total Amount Tsh {{ Cart::total() }}</h3>
                                     </div>
                                     <form action="{{ route('pos.storeOrder') }}" method="post">
                                         @csrf
@@ -156,16 +156,16 @@
                                     <h5 class="mb-3">Order Details</h5>
                                     <div class="mb-2">
                                         <h6>Sub Total</h6>
-                                        <p>${{ Cart::subtotal() }}</p>
+                                        <p>Tsh {{ Cart::subtotal() }}</p>
                                     </div>
                                     <div>
-                                        <h6>Vat (5%)</h6>
-                                        <p>${{ Cart::tax() }}</p>
+                                        <h6>Vat (18%)</h6>
+                                        <p>Tsh {{ Cart::tax() }}</p>
                                     </div>
                                 </div>
                                 <div class="ttl-amt py-2 px-3 d-flex justify-content-between align-items-center">
                                     <h6>Total</h6>
-                                    <h3 class="text-primary font-weight-700">${{ Cart::total() }}</h3>
+                                    <h3 class="text-primary font-weight-700">Tsh {{ Cart::total() }}</h3>
                                 </div>
                             </div>
                         </div>

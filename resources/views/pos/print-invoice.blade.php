@@ -122,16 +122,16 @@
                                             </div>
                                             <div class="mb-2">
                                                 <h6>Sub Total</h6>
-                                                <p>${{ Cart::subtotal() }}</p>
+                                                <p>Tsh {{ Cart::subtotal() }}</p>
                                             </div>
                                             <div>
-                                                <h6>Vat (5%)</h6>
-                                                <p>${{ Cart::tax() }}</p>
+                                                <h6>Vat (18%)</h6>
+                                                <p>Tsh {{ Cart::tax() }}</p>
                                             </div>
                                         </div>
                                         <div class="ttl-amt py-2 px-3 d-flex justify-content-between align-items-center">
                                             <h6>Total</h6>
-                                            <h3 class="text-primary font-weight-700">${{ Cart::total() }}</h3>
+                                            <h3 class="text-primary font-weight-700">Tsh {{ Cart::total() }}</h3>
                                         </div>
                                     </div>
                                 </div>

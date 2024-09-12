@@ -104,6 +104,7 @@ Point of Sale Management and Invoice build with Laravel 10 and MySql.
     Try login with username: `admin` and password: `password`
 
     or username: `user` and password: `password`
+    
 
 ## 📝 Contributing
 

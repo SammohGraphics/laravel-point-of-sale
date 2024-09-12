@@ -47,8 +47,8 @@
                                 </div>
                                 <div class="col-sm-6 text-end mb-50">
                                     <h4 class="inv-title-1">POS</h4>
-                                    <p class="inv-from-1">pos@example.com</p>
-                                    <p class="inv-from-2">Cirebon, Indonesia</p>
+                                    <p class="inv-from-1">sales@powerking.co.tz</p>
+                                    <p class="inv-from-2">Dar Es Salaam, Tanzania</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -62,8 +62,8 @@
                                 <div class="col-sm-6 text-end mb-50">
                                     <h4 class="inv-title-1">Details</h4>
                                     <p class="inv-from-1">Payment Status: {{ $order->payment_status }}</p>
-                                    <p class="inv-from-1">Total Pay: ${{ $order->pay }}</p>
-                                    <p class="inv-from-1">Due: ${{ $order->due }}</p>
+                                    <p class="inv-from-1">Total Pay: Tsh {{ $order->pay }}</p>
+                                    <p class="inv-from-1">Due: Tsh {{ $order->due }}</p>
                                 </div>
                             </div>
                         </div>
@@ -83,16 +83,16 @@
                                         @foreach ($orderDetails as $item)
                                         <tr>
                                             <td>{{ $item->product->product_name }}</td>
-                                            <td>${{ $item->unitcost }}</td>
+                                            <td>Tsh {{ $item->unitcost }}</td>
                                             <td>{{ $item->quantity }}</td>
-                                            <td>${{ $item->total }}</td>
+                                            <td>Tsh {{ $item->total }}</td>
                                         </tr>
                                         @endforeach
                                         <tr>
                                             <td><strong class="text-danger">Total</strong></td>
                                             <td></td>
                                             <td></td>
-                                            <td><strong class="text-danger">${{ $order->total }}</strong></td>
+                                            <td><strong class="text-danger">Tsh {{ $order->total }}</strong></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -100,9 +100,9 @@
                         </div>
                         {{-- <div class="invoice-informeshon-footer">
                             <ul>
-                                <li><a href="https://themeforest.net/user/themevessel/portfolio">www.themevessel.com</a></li>
-                                <li><a href="mailto:sales@hotelempire.com">info@themevessel.com</a></li>
-                                <li><a href="tel:+088-01737-133959">+088 01737 133959</a></li>
+                                <li><a href="powerking.co.tz">powerking.co.tz</a></li>
+                                <li><a href="mailto:info@powerking.co.tz">info@powerking.co.tz</a></li>
+                                <li><a href="tel:+255 712 343 287">+255 712 343 287</a></li>
                             </ul>
                         </div> --}}
                     </div>
