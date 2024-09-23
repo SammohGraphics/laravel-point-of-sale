@@ -52,4 +52,9 @@ class Product extends Model
             return $query->where('product_name', 'like', '%' . $search . '%');
         });
     }
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_product', 'product_id', 'order_id')
+                    ->withPivot('quantity'); // assuming a pivot table with quantity
+    }
 }

@@ -971,7 +971,7 @@ if (jQuery("#radar-multiple-chart").length) {
 
       // Create chart instance
       var chart = am4core.create("am-simple-chart", am4charts.XYChart);
-      chart.colors.list = [am4core.color("#32BDEA"),am4core.color("#6c757d")];
+      chart.colors.list = [am4core.color("#F6E724"),am4core.color("#6c757d")];
 
       // Add data
       chart.data = [{
@@ -4985,7 +4985,7 @@ if (jQuery("#editor").length) {
         height: 350,
         type: "candlestick"
       },
-      colors: ["#32BDEA", "#FF7E41"],
+      colors: ["#F6E724", "#FF7E41"],
       series: [{
         data: [{
           x: new Date(15387786e5),
@@ -5176,7 +5176,7 @@ if (jQuery("#editor").length) {
         candlestick: {
           colors: {
             upward: '#FF7E41',
-            downward: '#32BDEA'
+            downward: '#F6E724'
           }
         }
       }
@@ -5203,15 +5203,15 @@ if (jQuery("#editor").length) {
     // Create chart instance
     var chart = am4core.create("layout1-chart-2", am4charts.XYChart);
     chart.colors.list = [
-		  am4core.color("#32BDEA"),
-		  am4core.color("#32BDEA"),
-		  am4core.color("#32BDEA"),
-		  am4core.color("#32BDEA"),
-		  am4core.color("#32BDEA"),
-		  am4core.color("#32BDEA"),
-		  am4core.color("#32BDEA"),
-		  am4core.color("#32BDEA"),
-		  am4core.color("#32BDEA")
+		  am4core.color("#F6E724"),
+		  am4core.color("#F6E724"),
+		  am4core.color("#F6E724"),
+		  am4core.color("#F6E724"),
+		  am4core.color("#F6E724"),
+		  am4core.color("#F6E724"),
+		  am4core.color("#F6E724"),
+		  am4core.color("#F6E724"),
+		  am4core.color("#F6E724")
 		];
     chart.scrollbarX = new am4core.Scrollbar();
 
@@ -5391,7 +5391,7 @@ if (jQuery("#editor").length) {
         name: "Desktops",
         data: [17, 23, 15, 28, 22, 32]
     }],
-    colors: ['#32BDEA'],
+    colors: ['#F6E724'],
       chart: {
       height: 150,
       type: 'line',
@@ -5460,7 +5460,7 @@ if (jQuery("#editor").length) {
       type: 'bar',
       height: 300
     },
-    colors: ['#32BDEA','#FF7E41'],
+    colors: ['#F6E724','#FF7E41'],
         plotOptions: {
           bar: {
             horizontal: false,
@@ -5708,7 +5708,7 @@ if (jQuery("#editor").length) {
         candlestick: {
           colors: {
             upward: '#FF7E41',
-            downward: '#32BDEA'
+            downward: '#F6E724'
           }
         }
       }
@@ -5810,7 +5810,7 @@ if (jQuery("#editor").length) {
       // create chart
       var chart = am4core.create("report-chart2", am4charts.TreeMap);
       chart.hiddenState.properties.opacity = 0; // this makes initial fade in effect
-      chart.colors.list = [am4core.color("#32bdea"),am4core.color("#ff7e41"), am4core.color("#e83e8c")];
+      chart.colors.list = [am4core.color("#F6E724"),am4core.color("#ff7e41"), am4core.color("#e83e8c")];
 
       chart.data = [{
         name: "First",
@@ -6030,7 +6030,7 @@ if (jQuery("#editor").length) {
       height: 350,
       type: 'rangeBar'
     },
-    colors: ['#32BDEA', '#e83e8c', '#FF7E41'],
+    colors: ['#F6E724', '#e83e8c', '#FF7E41'],
     plotOptions: {
       bar: {
         horizontal: true,
@@ -6089,7 +6089,7 @@ if (jQuery("#editor").length) {
         type: 'xy'
       }
     },
-    colors: ['#32BDEA', '#e83e8c', '#FF7E41'],
+    colors: ['#F6E724', '#e83e8c', '#FF7E41'],
     xaxis: {
       tickAmount: 10,
       labels: {
