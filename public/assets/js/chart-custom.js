@@ -14,7 +14,7 @@ function apexChartUpdate(chart, detail) {
       }
     })
   }
-  
+
 // for am chart
 function amChartUpdate(chart, detail) {
   // let color = getComputedStyle(document.documentElement).getPropertyValue('--dark');
@@ -4586,7 +4586,7 @@ options = {
 };
 
 /*-------------- Widget Chart End ----------------*/
-  
+
 /*---------------------------------------------------------------------
    Editable Table
 -----------------------------------------------------------------------*/
@@ -4939,7 +4939,7 @@ $(function() {
         alert('Selected rating: ' + value);
     }
     });
-  } 
+  }
   if (typeof $.fn.mdbRate !== typeof undefined) {
     $('#rateMe1').mdbRate();
     $('#face-rating').mdbRate();
@@ -5155,7 +5155,7 @@ if (jQuery("#editor").length) {
         }]
       }],
       title: {
-        text: "$45,78956",
+        text: "Tsh 45,78956",
         align: "left"
       },
       xaxis: {
@@ -5188,7 +5188,7 @@ if (jQuery("#editor").length) {
         dark: true
       })
     }
-  
+
     document.addEventListener('ChangeColorMode', function (e) {
       apexChartUpdate(chart, e.detail)
     })
@@ -5199,7 +5199,7 @@ if (jQuery("#editor").length) {
     // Themes begin
     am4core.useTheme(am4themes_animated);
     // Themes end
-    
+
     // Create chart instance
     var chart = am4core.create("layout1-chart-2", am4charts.XYChart);
     chart.colors.list = [
@@ -5214,7 +5214,7 @@ if (jQuery("#editor").length) {
 		  am4core.color("#32BDEA")
 		];
     chart.scrollbarX = new am4core.Scrollbar();
-    
+
     // Add data
     chart.data = [{
       "country": "Jan",
@@ -5241,32 +5241,32 @@ if (jQuery("#editor").length) {
       "country": "Aug",
       "visits": 711
     }];
-    
+
     prepareParetoData();
-    
+
     function prepareParetoData(){
         var total = 0;
-    
+
         for(var i = 0; i < chart.data.length; i++){
             var value = chart.data[i].visits;
             total += value;
         }
-    
+
         var sum = 0;
         for(var i = 0; i < chart.data.length; i++){
             var value = chart.data[i].visits;
-            sum += value;   
+            sum += value;
             chart.data[i].pareto = sum / total * 100;
-        }    
+        }
     }
-    
+
     // Create axes
     var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "country";
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.renderer.minGridDistance = 60;
     categoryAxis.tooltip.disabled = true;
-    
+
     var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.renderer.minWidth = 50;
     valueAxis.min = 0;
@@ -5279,24 +5279,24 @@ if (jQuery("#editor").length) {
     series.dataFields.categoryX = "country";
     series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
     series.columns.template.strokeWidth = 0;
-    
+
     series.tooltip.pointerOrientation = "vertical";
-    
+
     series.columns.template.column.cornerRadiusTopLeft = 10;
     series.columns.template.column.cornerRadiusTopRight = 10;
     series.columns.template.column.fillOpacity = 0.8;
-    
+
     // on hover, make corner radiuses bigger
     var hoverState = series.columns.template.column.states.create("hover");
     hoverState.properties.cornerRadiusTopLeft = 0;
     hoverState.properties.cornerRadiusTopRight = 0;
     hoverState.properties.fillOpacity = 1;
-    
+
     series.columns.template.adapter.add("fill", function(fill, target) {
       return chart.colors.getIndex(target.dataItem.index);
     })
-    
-    
+
+
     var paretoValueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     paretoValueAxis.renderer.opposite = true;
     paretoValueAxis.min = 0;
@@ -5306,7 +5306,7 @@ if (jQuery("#editor").length) {
     paretoValueAxis.numberFormatter = new am4core.NumberFormatter();
     paretoValueAxis.numberFormatter.numberFormat = "#'%'"
     paretoValueAxis.cursorTooltipEnabled = false;
-    
+
     var paretoSeries = chart.series.push(new am4charts.LineSeries())
     paretoSeries.dataFields.valueY = "pareto";
     paretoSeries.dataFields.categoryX = "country";
@@ -5316,14 +5316,14 @@ if (jQuery("#editor").length) {
     paretoSeries.strokeWidth = 2;
     paretoSeries.stroke = new am4core.InterfaceColorSet().getFor("alternativeBackground");
     paretoSeries.strokeOpacity = 0.5;
-    
+
     // Cursor
     chart.cursor = new am4charts.XYCursor();
     chart.cursor.behavior = "panX";
-    
+
     }); // end am4core.ready()
   }
-  if (jQuery("#layout1-chart-3").length) {    
+  if (jQuery("#layout1-chart-3").length) {
     options = {
       series: [{
         name: "Desktops",
@@ -5385,7 +5385,7 @@ if (jQuery("#editor").length) {
       apexChartUpdate(chart, e.detail)
     })
   }
-  if (jQuery("#layout1-chart-4").length) {    
+  if (jQuery("#layout1-chart-4").length) {
     options = {
       series: [{
         name: "Desktops",
@@ -5447,7 +5447,7 @@ if (jQuery("#editor").length) {
       apexChartUpdate(chart, e.detail)
     })
   }
-  if (jQuery("#layout1-chart-5").length) {    
+  if (jQuery("#layout1-chart-5").length) {
     options = {
       series: [{
       name: 'Total Likes',
@@ -5720,7 +5720,7 @@ if (jQuery("#editor").length) {
         dark: true
       })
     }
-  
+
     document.addEventListener('ChangeColorMode', function (e) {
       apexChartUpdate(chart, e.detail)
     })
@@ -5795,7 +5795,7 @@ if (jQuery("#editor").length) {
         dark: true
       })
     }
-  
+
     document.addEventListener('ChangeColorMode', function (e) {
       apexChartUpdate(chart, e.detail)
     })
@@ -5806,12 +5806,12 @@ if (jQuery("#editor").length) {
       // Themes begin
       am4core.useTheme(am4themes_animated);
       // Themes end
-      
+
       // create chart
       var chart = am4core.create("report-chart2", am4charts.TreeMap);
       chart.hiddenState.properties.opacity = 0; // this makes initial fade in effect
       chart.colors.list = [am4core.color("#32bdea"),am4core.color("#ff7e41"), am4core.color("#e83e8c")];
-      
+
       chart.data = [{
         name: "First",
         children: [
@@ -5867,46 +5867,46 @@ if (jQuery("#editor").length) {
           }
         ]
       }];
-      
+
       chart.colors.step = 2;
-      
+
       // define data fields
       chart.dataFields.value = "value";
       chart.dataFields.name = "name";
       chart.dataFields.children = "children";
-      
+
       chart.zoomable = false;
       var bgColor = new am4core.InterfaceColorSet().getFor("background");
-      
+
       // level 0 series template
       var level0SeriesTemplate = chart.seriesTemplates.create("0");
       var level0ColumnTemplate = level0SeriesTemplate.columns.template;
-      
+
       level0ColumnTemplate.column.cornerRadius(10, 10, 10, 10);
       level0ColumnTemplate.fillOpacity = 0;
       level0ColumnTemplate.strokeWidth = 4;
       level0ColumnTemplate.strokeOpacity = 0;
-      
+
       // level 1 series template
       var level1SeriesTemplate = chart.seriesTemplates.create("1");
       var level1ColumnTemplate = level1SeriesTemplate.columns.template;
-      
+
       level1SeriesTemplate.tooltip.animationDuration = 0;
       level1SeriesTemplate.strokeOpacity = 1;
-      
+
       level1ColumnTemplate.column.cornerRadius(10, 10, 10, 10)
       level1ColumnTemplate.fillOpacity = 1;
       level1ColumnTemplate.strokeWidth = 4;
       level1ColumnTemplate.stroke = bgColor;
-      
+
       var bullet1 = level1SeriesTemplate.bullets.push(new am4charts.LabelBullet());
       bullet1.locationY = 0.5;
       bullet1.locationX = 0.5;
       bullet1.label.text = "{name}";
       bullet1.label.fill = am4core.color("#ffffff");
-      
+
       chart.maxLevels = 2;
-      
+
       }); // end am4core.ready()
   }
   if (jQuery("#report-chart3").length) {
@@ -6040,7 +6040,7 @@ if (jQuery("#editor").length) {
     xaxis: {
       type: 'datetime'
     },
-    
+
     stroke: {
       width: 1
     },
@@ -6061,12 +6061,12 @@ if (jQuery("#editor").length) {
          dark: true
        })
      }
-   
+
      document.addEventListener('ChangeColorMode', function (e) {
        apexChartUpdate(chart, e.detail)
      })
   }
-  if (jQuery("#report-chart4").length) {   
+  if (jQuery("#report-chart4").length) {
     options = {
       series: [{
       name: "SAMPLE A",
@@ -6115,7 +6115,7 @@ if (jQuery("#editor").length) {
          dark: true
        })
      }
-   
+
      document.addEventListener('ChangeColorMode', function (e) {
        apexChartUpdate(chart, e.detail)
      })

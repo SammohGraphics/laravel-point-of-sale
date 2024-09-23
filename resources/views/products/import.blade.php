@@ -13,11 +13,11 @@
 
                 <div class="card-body">
                     <form action="{{ route('products.importStore') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+                        @csrf
                         <div class="row">
                             <div class="input-group mb-4 col-lg-6">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input @error('upload_file') is-invalid @enderror" id="upload_file" name="upload_file" onchange="showFileName();">
+                                    <input type="file" class="custom-file-input @error('upload_file') is-invalid @enderror" id="upload_file" name="upload_file" accept=".xls,.xlsx" onchange="showFileName(this);">
                                     <label class="custom-file-label" for="upload_file" id="label_input">Choose file (.xls / .xlsx)</label>
                                 </div>
                                 @error('upload_file')
@@ -41,17 +41,16 @@
 </div>
 
 <script>
-function showFileName() {
-    const input = document.getElementById('upload_file');
+function showFileName(input) {
     const label_input = document.getElementById('label_input');
 
-    // the change event gives us the input it occurred in
-    const srcFile = input.srcElement;
-
-    // the input has an array of files in the `files` property, each one has a name that you can use. We're just using the name here.
-    var fileName = input.files[0].name;
-
-    label_input.innerHTML = fileName;
+    // Check if files are selected
+    if (input.files.length > 0) {
+        var fileName = input.files[0].name;
+        label_input.innerHTML = fileName;
+    } else {
+        label_input.innerHTML = 'Choose file (.xls / .xlsx)'; // Reset to default label
+    }
 }
 </script>
 

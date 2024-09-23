@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 
@@ -40,30 +39,9 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'photo' => 'image|file|max:1024',
-            'name' => 'required|string|max:50',
-            'email' => 'required|email|max:50|unique:employees,email',
-            'phone' => 'required|string|max:15|unique:employees,phone',
-            'experience' => 'max:6|nullable',
-            'salary' => 'required|numeric',
-            'vacation' => 'max:50|nullable',
-            'city' => 'requried|max:50',
-            'address' => 'required|max:100',
-        ];
+        $validatedData = $this->validateEmployee($request);
 
-        $validatedData = $request->validate($rules);
-
-        /**
-         * Handle upload image with Storage.
-         */
-        if ($file = $request->file('photo')) {
-            $fileName = hexdec(uniqid()).'.'.$file->getClientOriginalExtension();
-            $path = 'public/employees/';
-
-            $file->storeAs($path, $fileName);
-            $validatedData['photo'] = $fileName;
-        }
+        $validatedData['photo'] = $this->handleImageUpload($request);
 
         Employee::create($validatedData);
 
@@ -75,9 +53,7 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        return view('employees.show', [
-            'employee' => $employee,
-        ]);
+        return view('employees.show', compact('employee'));
     }
 
     /**
@@ -85,9 +61,7 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
-        return view('employees.edit', [
-            'employee' => $employee,
-        ]);
+        return view('employees.edit', compact('employee'));
     }
 
     /**
@@ -95,39 +69,17 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Employee $employee)
     {
-        $rules = [
-            'photo' => 'image|file|max:1024',
-            'name' => 'required|string|max:50',
-            'email' => 'required|email|max:50|unique:employees,email,'.$employee->id,
-            'phone' => 'required|string|max:20|unique:employees,phone,'.$employee->id,
-            'experience' => 'string|max:6|nullable',
-            'salary' => 'numeric',
-            'vacation' => 'max:50|nullable',
-            'city' => 'max:50',
-            'address' => 'required|max:100',
-        ];
+        $validatedData = $this->validateEmployee($request, $employee->id);
 
-        $validatedData = $request->validate($rules);
-
-        /**
-         * Handle upload image with Storage.
-         */
-        if ($file = $request->file('photo')) {
-            $fileName = hexdec(uniqid()).'.'.$file->getClientOriginalExtension();
-            $path = 'public/employees/';
-
-            /**
-             * Delete photo if exists.
-             */
-            if($employee->photo){
-                Storage::delete($path . $employee->photo);
+        if ($request->hasFile('photo')) {
+            // Delete the existing photo
+            if ($employee->photo) {
+                Storage::delete('public/employees/' . $employee->photo);
             }
-
-            $file->storeAs($path, $fileName);
-            $validatedData['photo'] = $fileName;
+            $validatedData['photo'] = $this->handleImageUpload($request);
         }
 
-        Employee::where('id', $employee->id)->update($validatedData);
+        $employee->update($validatedData);
 
         return Redirect::route('employees.index')->with('success', 'Employee has been updated!');
     }
@@ -137,15 +89,44 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        /**
-         * Delete photo if exists.
-         */
-        if($employee->photo){
+        if ($employee->photo) {
             Storage::delete('public/employees/' . $employee->photo);
         }
 
-        Employee::destroy($employee->id);
+        $employee->delete();
 
         return Redirect::route('employees.index')->with('success', 'Employee has been deleted!');
+    }
+
+    /**
+     * Validate employee data.
+     */
+    private function validateEmployee(Request $request, $employeeId = null)
+    {
+        return $request->validate([
+            'photo' => 'image|file|max:1024',
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50|unique:employees,email' . ($employeeId ? ",$employeeId" : ''),
+            'phone' => 'required|string|max:15|unique:employees,phone' . ($employeeId ? ",$employeeId" : ''),
+            'experience' => 'nullable|string|max:6',
+            'salary' => 'required|numeric',
+            'vacation' => 'nullable|string|max:50',
+            'city' => 'required|string|max:50',  // Corrected 'requried' to 'required'
+            'address' => 'required|string|max:100',
+        ]);
+    }
+
+    /**
+     * Handle image upload.
+     */
+    private function handleImageUpload(Request $request)
+    {
+        $file = $request->file('photo');
+        $fileName = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
+        $path = 'public/employees/';
+
+        $file->storeAs($path, $fileName);
+
+        return $fileName;
     }
 }

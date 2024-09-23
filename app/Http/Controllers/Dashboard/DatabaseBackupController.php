@@ -2,38 +2,61 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use File;
+use Artisan;
 
 class DatabaseBackupController extends Controller
-{    public function index()
+{
+    public function index()
     {
-        return view('database.index', [
-            'files' => File::allFiles(storage_path('/app/POS'))
-        ]);
+        // Ensure the directory exists before loading files
+        $backupDir = storage_path('/app/POS');
+        if (!File::exists($backupDir)) {
+            File::makeDirectory($backupDir, 0755, true);
+        }
+
+        $files = File::allFiles($backupDir);
+
+        return view('database.index', compact('files'));
     }
 
-    // Backup database is not working, and you need to enter manually in terminal with command php artisan backup:run.
-    public function create(){
-        \Artisan::call('backup:run');
+    public function create()
+    {
+        try {
+            // Run backup command programmatically
+            Artisan::call('backup:run', ['--only-db' => true]);
 
-        return Redirect::route('backup.index')->with('success', 'Database Backup Successfully!');
+            return Redirect::route('backup.index')->with('success', 'Database Backup Successfully!');
+        } catch (\Exception $e) {
+            return Redirect::route('backup.index')->with('error', 'Failed to create backup: ' . $e->getMessage());
+        }
     }
 
     public function download(String $getFileName)
     {
-        $path = storage_path('app\POS/' . $getFileName);
+        $path = storage_path('app/POS/' . $getFileName);
 
-        return response()->download($path);
+        // Check if the file exists
+        if (File::exists($path)) {
+            return response()->download($path);
+        } else {
+            return Redirect::route('backup.index')->with('error', 'File not found.');
+        }
     }
 
     public function delete(String $getFileName)
     {
-        Storage::delete('POS/' . $getFileName);
+        try {
+            Storage::delete('POS/' . $getFileName);
 
-        return Redirect::route('backup.index')->with('success', 'Database Deleted Successfully!');
+            return Redirect::route('backup.index')->with('success', 'Backup Deleted Successfully!');
+        } catch (\Exception $e) {
+            return Redirect::route('backup.index')->with('error', 'Failed to delete backup: ' . $e->getMessage());
+        }
     }
 }
+

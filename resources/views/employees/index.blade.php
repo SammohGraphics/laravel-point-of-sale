@@ -81,7 +81,7 @@
                             <td>{{ $employee->name }}</td>
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->phone }}</td>
-                            <td>${{ $employee->salary }}</td>
+                            <td>Tsh {{ $employee->salary }}</td>
                             <td>{{ $employee->city }}</td>
                             <td>
                                 <div class="d-flex align-items-center list-action">

@@ -98,13 +98,13 @@
                                 </table>
                             </div>
                         </div>
-                        {{-- <div class="invoice-informeshon-footer">
+                        <div class="invoice-informeshon-footer">
                             <ul>
                                 <li><a href="powerking.co.tz">powerking.co.tz</a></li>
                                 <li><a href="mailto:info@powerking.co.tz">info@powerking.co.tz</a></li>
                                 <li><a href="tel:+255 712 343 287">+255 712 343 287</a></li>
                             </ul>
-                        </div> --}}
+                        </div>
                     </div>
 
                     <div class="invoice-btn-section clearfix d-print-none">

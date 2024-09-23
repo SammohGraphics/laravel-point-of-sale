@@ -119,7 +119,7 @@
                                     <label class="col-form-label">Salary</label>
                                 </div>
                                 <div class="col-sm-9 col-8">
-                                    <input type="text" class="form-control bg-white" value="${{ $employee->salary }}" readonly>
+                                    <input type="text" class="form-control bg-white" value="Tsh {{ $employee->salary }}" readonly>
                                 </div>
                             </div>
                         </li>

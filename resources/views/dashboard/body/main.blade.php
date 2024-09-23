@@ -1,48 +1,61 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>POS Dash</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="POS Dashboard">
+    <meta name="author" content="Your Company">
 
-        <!-- Favicon -->
-        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}"/>
-        <link rel="stylesheet" href="{{ asset('assets/css/backend-plugin.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/css/backend.css?v=1.0.0') }}">
+    <title>POS Dashboard</title>
 
-        <link rel="stylesheet" href="{{ asset('assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/vendor/remixicon/fonts/remixicon.css') }}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}"/>
 
-        @yield('specificpagestyles')
-    </head>
+    <!-- Core Stylesheets -->
+    <link rel="stylesheet" href="{{ asset('assets/css/backend-plugin.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/backend.css?v=1.0.0') }}">
+
+    <!-- Icon Fonts -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/remixicon/fonts/remixicon.css') }}">
+
+    <!-- Page Specific Styles -->
+    @yield('specificpagestyles')
+</head>
 <body>
-    <!-- loader Start -->
-    {{-- <div id="loading">
+    <!-- Loader (optional, can be toggled as needed) -->
+    <div id="loading" aria-hidden="true" style="display: none;">
         <div id="loading-center"></div>
-    </div> --}}
-    <!-- loader END -->
+    </div>
 
-    <!-- Wrapper Start -->
+    <!-- Main Wrapper -->
     <div class="wrapper">
+        <!-- Sidebar -->
         @include('dashboard.body.sidebar')
 
+        <!-- Navbar -->
         @include('dashboard.body.navbar')
 
+        <!-- Main Content -->
         <div class="content-page">
             @yield('container')
         </div>
     </div>
-    <!-- Wrapper End-->
+    <!-- End Main Wrapper -->
 
+    <!-- Footer -->
     @include('dashboard.body.footer')
 
-    <!-- Backend Bundle JavaScript -->
+    <!-- Core JavaScript -->
     <script src="{{ asset('assets/js/backend-bundle.min.js') }}"></script>
+
+    <!-- FontAwesome Script -->
     <script src="https://kit.fontawesome.com/4c897dc313.js" crossorigin="anonymous"></script>
 
+    <!-- Page Specific Scripts -->
     @yield('specificpagescripts')
 
-    <!-- App JavaScript -->
+    <!-- App JS -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
 </body>
 </html>

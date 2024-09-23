@@ -4,19 +4,19 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-        @if (session()->has('success'))
-            <div class="alert text-white bg-success" role="alert">
-                <div class="iq-alert-text">{{ session('success') }}</div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <i class="ri-close-line"></i>
-                </button>
-            </div>
-        @endif
+            @if (session()->has('success'))
+                <div class="alert text-white bg-success" role="alert">
+                    <div class="iq-alert-text">{{ session('success') }}</div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <i class="ri-close-line"></i>
+                    </button>
+                </div>
+            @endif
         </div>
         <div class="col-lg-4">
             <div class="card card-transparent card-block card-stretch card-height border-none">
                 <div class="card-body p-0 mt-lg-2 mt-0">
-                    <h3 class="mb-3">Hi {{ auth()->user()->name }}, Good Morning</h3>
+                    <h3 class="mb-3">Hi {{ auth()->user()->name }}, {{ $greeting }}</h3>
                     <p class="mb-0 mr-4">Your dashboard gives you views of key performance or business process.</p>
                 </div>
             </div>
@@ -36,8 +36,7 @@
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
-                                <span class="bg-info iq-progress progress-1" data-percent="85">
-                                </span>
+                                <span class="bg-info iq-progress progress-1" data-percent="85"></span>
                             </div>
                         </div>
                     </div>
@@ -55,8 +54,7 @@
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
-                                <span class="bg-danger iq-progress progress-1" data-percent="70">
-                                </span>
+                                <span class="bg-danger iq-progress progress-1" data-percent="70"></span>
                             </div>
                         </div>
                     </div>
@@ -70,151 +68,154 @@
                                 </div>
                                 <div>
                                     <p class="mb-2">Complete Orders</p>
-                                    <h4>{{ count($complete_orders) }}</h4>
+                                    <h4>{{ $complete_orders_count }}</h4>
                                 </div>
                             </div>
                             <div class="iq-progress-bar mt-2">
-                                <span class="bg-success iq-progress progress-1" data-percent="75">
-                                </span>
+                                <span class="bg-success iq-progress progress-1" data-percent="75"></span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card card-block card-stretch card-height">
-                <div class="card-header d-flex justify-content-between">
-                    <div class="header-title">
-                        <h4 class="card-title">Overview</h4>
-                    </div>
-                    <div class="card-header-toolbar d-flex align-items-center">
-                        <div class="dropdown">
-                            <span class="dropdown-toggle dropdown-bg btn" id="dropdownMenuButton001"
-                                data-toggle="dropdown">
-                                This Month<i class="ri-arrow-down-s-line ml-1"></i>
-                            </span>
-                            <div class="dropdown-menu dropdown-menu-right shadow-none"
-                                aria-labelledby="dropdownMenuButton001">
-                                <a class="dropdown-item" href="#">Year</a>
-                                <a class="dropdown-item" href="#">Month</a>
-                                <a class="dropdown-item" href="#">Week</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div id="layout1-chart1"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card card-block card-stretch card-height">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <div class="header-title">
-                        <h4 class="card-title">Revenue Vs Cost</h4>
-                    </div>
-                    <div class="card-header-toolbar d-flex align-items-center">
-                        <div class="dropdown">
-                            <span class="dropdown-toggle dropdown-bg btn" id="dropdownMenuButton002"
-                                data-toggle="dropdown">
-                                This Month<i class="ri-arrow-down-s-line ml-1"></i>
-                            </span>
-                            <div class="dropdown-menu dropdown-menu-right shadow-none"
-                                aria-labelledby="dropdownMenuButton002">
-                                <a class="dropdown-item" href="#">Yearly</a>
-                                <a class="dropdown-item" href="#">Monthly</a>
-                                <a class="dropdown-item" href="#">Weekly</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div id="layout1-chart-2" style="min-height: 360px;"></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-8">
-            <div class="card card-block card-stretch card-height">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <div class="header-title">
-                        <h4 class="card-title">Top Products</h4>
-                    </div>
-                    <div class="card-header-toolbar d-flex align-items-center">
-                        <div class="dropdown">
-                            <span class="dropdown-toggle dropdown-bg btn" id="dropdownMenuButton006"
-                                data-toggle="dropdown">
-                                This Month<i class="ri-arrow-down-s-line ml-1"></i>
-                            </span>
-                            <div class="dropdown-menu dropdown-menu-right shadow-none"
-                                aria-labelledby="dropdownMenuButton006">
-                                <a class="dropdown-item" href="#">Year</a>
-                                <a class="dropdown-item" href="#">Month</a>
-                                <a class="dropdown-item" href="#">Week</a>
-                            </div>
-                        </div>
+        <div class="row mt-4">
+            <!-- Pie Chart for Order Status -->
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card card-block card-stretch card-height">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Order Status</h5>
+                        <canvas id="orderStatusChart"></canvas>
                     </div>
                 </div>
-                <div class="card-body">
-                    <ul class="list-unstyled row top-product mb-0">
-                    @foreach ($products as $product)
-                        <li class="col-lg-3">
-                            <div class="card card-block card-stretch card-height mb-0">
-                                <div class="card-body">
-                                    <div class="bg-warning-light rounded">
-                                        <img src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}" class="style-img img-fluid m-auto p-3" alt="image">
-                                    </div>
-                                    <div class="style-text text-left mt-3">
-                                        <h5 class="mb-1">{{ $product->product_name }}</h5>
-                                        <p class="mb-0">{{ $product->product_store }} Item</p>
-                                    </div>
+            </div>
+            <!-- Line Chart for Daily Sales -->
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card card-block card-stretch card-height">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Daily Sales</h5>
+                        <canvas id="dailySalesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Orders List -->
+            <div class="col-lg-4 d-flex justify-content-center">
+                <div class="card card-block card-stretch card-height">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Completed Orders</h5>
+                        @foreach($completed_orders as $order)
+                            <div class="order-item d-flex align-items-center mb-3">
+                                <div class="order-image">
+                                    <img src="{{ $order->product_image }}" class="img-fluid" alt="product image" style="width: 50px; height: 50px;">
+                                </div>
+                                <div class="order-details ml-3">
+                                    <p class="mb-0"><strong>{{ $order->product_name }}</strong></p>
+                                    <p class="mb-0">Tsh {{ number_format($order->pay, 2) }}</p>
                                 </div>
                             </div>
-                        </li>
-                    @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card card-transparent card-block card-stretch mb-4">
-                <div class="card-header d-flex align-items-center justify-content-between p-0">
-                    <div class="header-title">
-                        <h4 class="card-title mb-0">New Products</h4>
-                    </div>
-                    <div class="card-header-toolbar d-flex align-items-center">
-                        <div><a href="#" class="btn btn-primary view-btn font-size-14">View All</a></div>
+                            <hr>
+                        @endforeach
                     </div>
                 </div>
             </div>
-            @foreach ($new_products as $product)
-            <div class="card card-block card-stretch card-height-helf">
-                <div class="card-body card-item-right">
-                    <div class="d-flex align-items-top">
-                        <div class="bg-warning-light rounded">
-                            <img src="../assets/images/product/04.png" class="style-img img-fluid m-auto" alt="image">
-                        </div>
-                        <div class="style-text text-left">
-                            <h5 class="mb-2">{{ $product->product_name }}</h5>
-                            <p class="mb-2">Stock : {{ $product->product_store }}</p>
-                            <p class="mb-0">Price : ${{ $product->selling_price }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
+
+
         </div>
     </div>
-    <!-- Page end  -->
 </div>
 @endsection
 
 @section('specificpagescripts')
-<!-- Table Treeview JavaScript -->
-<script src="{{ asset('assets/js/table-treeview.js') }}"></script>
-<!-- Chart Custom JavaScript -->
-<script src="{{ asset('assets/js/customizer.js') }}"></script>
-<!-- Chart Custom JavaScript -->
-<script async src="{{ asset('assets/js/chart-custom.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Pie Chart for Order Status
+    var ctxPie = document.getElementById('orderStatusChart').getContext('2d');
+    var orderStatusChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: ['Complete', 'Pending', 'Cancelled'],
+            datasets: [{
+                data: [{{ $complete_orders_count }}, {{ $pending_orders_count }}, {{ $cancelled_orders_count }}],
+                backgroundColor: ['#78C091', '#32BDEA', '#E08DB4'],
+                hoverBackgroundColor: ['#78C091', '#32BDEA', '#E08DB4'],
+                borderColor: '#fff',
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 16,
+                    },
+                    bodyFont: {
+                        size: 14
+                    }
+                }
+            }
+        }
+    });
+
+    // Line Chart for Daily Sales
+    var ctxLine = document.getElementById('dailySalesChart').getContext('2d');
+    var dailySalesChart = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($daily_sales->pluck('date')) !!}, // Dates
+            datasets: [{
+                label: 'Sales in TSH',
+                data: {!! json_encode($daily_sales->pluck('total')) !!}, // Sales Data
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: '#32BDEA',
+                fill: true,
+                tension: 0.1,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                pointHoverBackgroundColor: '#32BDEA'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 16,
+                    },
+                    bodyFont: {
+                        size: 14
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 5000
+                    }
+                }
+            }
+        }
+    });
+</script>
 @endsection

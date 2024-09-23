@@ -7,215 +7,255 @@ use App\Models\Product;
 use App\Models\OrderDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Redirect;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Redirect;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of pending orders.
      */
     public function pendingOrders()
     {
-        $row = (int) request('row', 10);
+        $orders = $this->getPaginatedOrders('pending');
 
-        if ($row < 1 || $row > 100) {
-            abort(400, 'The per-page parameter must be an integer between 1 and 100.');
-        }
-
-        $orders = Order::where('order_status', 'pending')->sortable()->paginate($row);
-
-        return view('orders.pending-orders', [
-            'orders' => $orders
-        ]);
+        return view('orders.pending-orders', compact('orders'));
     }
 
+    /**
+     * Display a listing of complete orders.
+     */
     public function completeOrders()
     {
-        $row = (int) request('row', 10);
+        $orders = $this->getPaginatedOrders('complete');
 
+        return view('orders.complete-orders', compact('orders'));
+    }
+
+    /**
+     * Get paginated orders based on status.
+     */
+    private function getPaginatedOrders(string $status)
+    {
+        $row = (int) request('row', 10);
         if ($row < 1 || $row > 100) {
             abort(400, 'The per-page parameter must be an integer between 1 and 100.');
         }
 
-        $orders = Order::where('order_status', 'complete')->sortable()->paginate($row);
-
-        return view('orders.complete-orders', [
-            'orders' => $orders
-        ]);
+        return Order::where('order_status', $status)->sortable()->paginate($row);
     }
 
+    /**
+     * Display stock management page.
+     */
     public function stockManage()
     {
         $row = (int) request('row', 10);
-
         if ($row < 1 || $row > 100) {
             abort(400, 'The per-page parameter must be an integer between 1 and 100.');
         }
 
-        return view('stock.index', [
-            'products' => Product::with(['category', 'supplier'])
-                ->filter(request(['search']))
-                ->sortable()
-                ->paginate($row)
-                ->appends(request()->query()),
+        $products = Product::with(['category', 'supplier'])
+            ->filter(request(['search']))
+            ->sortable()
+            ->paginate($row)
+            ->appends(request()->query());
+
+        return view('stock.index', compact('products'));
+    }
+
+    /**
+     * Store a newly created order.
+     */
+    public function storeOrder(Request $request)
+    {
+        $validatedData = $this->validateOrderData($request);
+
+        DB::beginTransaction();
+        try {
+            $invoice_no = $this->generateInvoiceNo();
+            $validatedData['order_date'] = Carbon::now()->format('Y-m-d');
+            $validatedData['order_status'] = 'pending';
+            $validatedData['total_products'] = Cart::count();
+            $validatedData['sub_total'] = Cart::subtotal();
+            $validatedData['vat'] = Cart::tax();
+            $validatedData['invoice_no'] = $invoice_no;
+            $validatedData['total'] = Cart::total();
+            $validatedData['due'] = $validatedData['total'] - $validatedData['pay'];
+            $validatedData['created_at'] = Carbon::now();
+
+            $order_id = Order::create($validatedData)->id;
+
+            $this->storeOrderDetails($order_id);
+
+            DB::commit();
+
+            // Clear the cart
+            Cart::destroy();
+
+            return Redirect::route('dashboard')->with('success', 'Order has been created!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Order creation failed: " . $e->getMessage());
+            return Redirect::back()->with('error', 'Failed to create order.');
+        }
+    }
+
+    /**
+     * Validate order data.
+     */
+    private function validateOrderData(Request $request)
+    {
+        return $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'payment_status' => 'required|string',
+            'pay' => 'nullable|numeric|min:0',
+            'due' => 'nullable|numeric|min:0',
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Generate unique invoice number.
      */
-    public function storeOrder(Request $request)
+    private function generateInvoiceNo()
     {
-        $rules = [
-            'customer_id' => 'required|numeric',
-            'payment_status' => 'required|string',
-            'pay' => 'numeric|nullable',
-            'due' => 'numeric|nullable',
-        ];
-
-        $invoice_no = IdGenerator::generate([
+        return IdGenerator::generate([
             'table' => 'orders',
             'field' => 'invoice_no',
             'length' => 10,
             'prefix' => 'INV-'
         ]);
-
-        $validatedData = $request->validate($rules);
-        $validatedData['order_date'] = Carbon::now()->format('Y-m-d');
-        $validatedData['order_status'] = 'pending';
-        $validatedData['total_products'] = Cart::count();
-        $validatedData['sub_total'] = Cart::subtotal();
-        $validatedData['vat'] = Cart::tax();
-        $validatedData['invoice_no'] = $invoice_no;
-        $validatedData['total'] = Cart::total();
-        $validatedData['due'] = Cart::total() - $validatedData['pay'];
-        $validatedData['created_at'] = Carbon::now();
-
-        $order_id = Order::insertGetId($validatedData);
-
-        // Create Order Details
-        $contents = Cart::content();
-        $oDetails = array();
-
-        foreach ($contents as $content) {
-            $oDetails['order_id'] = $order_id;
-            $oDetails['product_id'] = $content->id;
-            $oDetails['quantity'] = $content->qty;
-            $oDetails['unitcost'] = $content->price;
-            $oDetails['total'] = $content->total;
-            $oDetails['created_at'] = Carbon::now();
-
-            OrderDetails::insert($oDetails);
-        }
-
-        // Delete Cart Sopping History
-        Cart::destroy();
-
-        return Redirect::route('dashboard')->with('success', 'Order has been created!');
     }
 
     /**
-     * Display the specified resource.
+     * Store order details.
+     */
+    private function storeOrderDetails($order_id)
+    {
+        $contents = Cart::content();
+        foreach ($contents as $content) {
+            OrderDetails::create([
+                'order_id' => $order_id,
+                'product_id' => $content->id,
+                'quantity' => $content->qty,
+                'unitcost' => $content->price,
+                'total' => $content->total,
+                'created_at' => Carbon::now(),
+            ]);
+        }
+    }
+
+    /**
+     * Display the order details.
      */
     public function orderDetails(Int $order_id)
     {
-        $order = Order::where('id', $order_id)->first();
+        $order = Order::findOrFail($order_id);
         $orderDetails = OrderDetails::with('product')
-                        ->where('order_id', $order_id)
-                        ->orderBy('id', 'DESC')
-                        ->get();
+            ->where('order_id', $order_id)
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        return view('orders.details-order', [
-            'order' => $order,
-            'orderDetails' => $orderDetails,
-        ]);
+        return view('orders.details-order', compact('order', 'orderDetails'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the order status to complete and adjust stock.
      */
     public function updateStatus(Request $request)
     {
-        $order_id = $request->id;
+        DB::beginTransaction();
+        try {
+            $order = Order::findOrFail($request->id);
+            $this->reduceProductStock($order->id);
 
-        // Reduce the stock
+            $order->update(['order_status' => 'complete']);
+
+            DB::commit();
+            return Redirect::route('order.pendingOrders')->with('success', 'Order has been completed!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to update order status: " . $e->getMessage());
+            return Redirect::back()->with('error', 'Failed to complete order.');
+        }
+    }
+
+    /**
+     * Reduce product stock when order is completed.
+     */
+    private function reduceProductStock($order_id)
+    {
         $products = OrderDetails::where('order_id', $order_id)->get();
 
         foreach ($products as $product) {
             Product::where('id', $product->product_id)
-                    ->update(['product_store' => DB::raw('product_store-'.$product->quantity)]);
+                ->update(['product_store' => DB::raw('product_store - ' . $product->quantity)]);
         }
-
-        Order::findOrFail($order_id)->update(['order_status' => 'complete']);
-
-        return Redirect::route('order.pendingOrders')->with('success', 'Order has been completed!');
     }
 
-    public function invoiceDownload(Int $order_id)
-    {
-        $order = Order::where('id', $order_id)->first();
-        $orderDetails = OrderDetails::with('product')
-                        ->where('order_id', $order_id)
-                        ->orderBy('id', 'DESC')
-                        ->get();
-
-        // show data (only for debugging)
-        return view('orders.invoice-order', [
-            'order' => $order,
-            'orderDetails' => $orderDetails,
-        ]);
-    }
-
+    /**
+     * Display pending due orders.
+     */
     public function pendingDue()
     {
-        $row = (int) request('row', 10);
+        $orders = $this->getPaginatedDueOrders();
 
+        return view('orders.pending-due', compact('orders'));
+    }
+
+    /**
+     * Get paginated due orders.
+     */
+    private function getPaginatedDueOrders()
+    {
+        $row = (int) request('row', 10);
         if ($row < 1 || $row > 100) {
             abort(400, 'The per-page parameter must be an integer between 1 and 100.');
         }
 
-        $orders = Order::where('due', '>', '0')
-            ->sortable()
-            ->paginate($row);
-
-        return view('orders.pending-due', [
-            'orders' => $orders
-        ]);
+        return Order::where('due', '>', 0)->sortable()->paginate($row);
     }
 
-    public function orderDueAjax(Int $id)
-    {
-        $order = Order::findOrFail($id);
-
-        return response()->json($order);
-    }
-
+    /**
+     * Update the due payment for an order.
+     */
     public function updateDue(Request $request)
     {
-        $rules = [
-            'order_id' => 'required|numeric',
-            'due' => 'required|numeric',
-        ];
-
-        $validatedData = $request->validate($rules);
+        $validatedData = $request->validate([
+            'order_id' => 'required|exists:orders,id',
+            'due' => 'required|numeric|min:0',
+        ]);
 
         $order = Order::findOrFail($request->order_id);
-        $mainPay = $order->pay;
-        $mainDue = $order->due;
 
-        $paid_due = $mainDue - $validatedData['due'];
-        $paid_pay = $mainPay + $validatedData['due'];
+        $paid_due = $order->due - $validatedData['due'];
+        $paid_pay = $order->pay + $validatedData['due'];
 
-        Order::findOrFail($request->order_id)->update([
+        $order->update([
             'due' => $paid_due,
             'pay' => $paid_pay,
         ]);
 
         return Redirect::route('order.pendingDue')->with('success', 'Due Amount Updated Successfully!');
+    }
+
+    /**
+     * Download the invoice for an order.
+     */
+    public function invoiceDownload(Int $order_id)
+    {
+        $order = Order::findOrFail($order_id);
+        $orderDetails = OrderDetails::with('product')
+            ->where('order_id', $order_id)
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return view('orders.invoice-order', compact('order', 'orderDetails'));
     }
 }

@@ -78,9 +78,9 @@
                             </td>
                             <td>{{ $advanceSalary->employee->name }}</td>
                             <td>{{ Carbon\Carbon::parse($advanceSalary->date)->format('M/Y') }}</td>
-                            <td>${{ $advanceSalary->employee->salary }}</td>
-                            <td>{{ $advanceSalary->advance_salary ? '$'.$advanceSalary->advance_salary : 'No Advance' }}</td>
-                            <td>${{ $advanceSalary->employee->salary - $advanceSalary->advance_salary }}</td>
+                            <td>Tsh {{ $advanceSalary->employee->salary }}</td>
+                            <td>{{ $advanceSalary->advance_salary ? 'Tsh '.$advanceSalary->advance_salary : 'No Advance' }}</td>
+                            <td>Tsh {{ $advanceSalary->employee->salary - $advanceSalary->advance_salary }}</td>
                             <td>
                                 <div class="d-flex align-items-center list-action">
                                     <a class="btn btn-info mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pay Now"

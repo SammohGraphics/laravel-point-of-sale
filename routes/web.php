@@ -88,6 +88,7 @@ Route::middleware(['permission:product.menu'])->group(function () {
     Route::resource('/products', ProductController::class);
 });
 
+
 // ====== CATEGORY PRODUCTS ======
 Route::middleware(['permission:category.menu'])->group(function () {
     Route::resource('/categories', CategoryController::class);
