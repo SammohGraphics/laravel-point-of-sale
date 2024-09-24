@@ -29,6 +29,17 @@
                 </li>
                 @endif
 
+                {{-- <hr> --}}
+
+                @if (auth()->user()->can('pos.menu'))
+                <li class="{{ Request::is('pos*') ? 'active' : '' }}">
+                    <a href="{{ route('pos.index') }}" class="svg-icon">
+                        <i class="fas fa-file-invoice"></i>
+                        <span class="ml-3">Invoce</span>
+                    </a>
+                </li>
+                @endif
+
                 <hr>
 
                 @if (auth()->user()->can('orders.menu'))
