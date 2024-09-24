@@ -16,6 +16,7 @@ use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\PosController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\UserController;
+//use App\Http\Controllers\PosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +103,18 @@ Route::middleware(['permission:pos.menu'])->group(function () {
     Route::get('/pos/delete/{rowId}', [PosController::class, 'deleteCart'])->name('pos.deleteCart');
     Route::post('/pos/invoice/create', [PosController::class, 'createInvoice'])->name('pos.createInvoice');
     Route::post('/pos/invoice/print', [PosController::class, 'printInvoice'])->name('pos.printInvoice');
+
+    Route::post('pos/addCart', [PosController::class, 'addCart'])->name('pos.addCart');
+    Route::post('pos/update/{rowId}', [PosController::class, 'updateCart'])->name('pos.updateCart');
+    Route::get('pos/delete/{rowId}', [PosController::class, 'deleteCart'])->name('pos.deleteCart');
+    Route::get('pos/searchByCode', [PosController::class, 'searchByCode'])->name('pos.searchByCode');
+    Route::get('pos/searchByName', [PosController::class, 'searchByName'])->name('pos.searchByName');
+
+    Route::get('/pos/searchByCode', [PosController::class, 'searchByCode'])->name('pos.searchByCode');
+    Route::get('/pos/liveSearch', [PosController::class, 'liveSearch'])->name('pos.liveSearch');
+    Route::get('/pos/getProductById', [PosController::class, 'getProductById'])->name('pos.getProductById');
+    Route::post('pos/update/{rowId}', [PosController::class, 'updateCart'])->name('pos.updateCart');
+
 
     // Create Order
     Route::post('/pos/order', [OrderController::class, 'storeOrder'])->name('pos.storeOrder');

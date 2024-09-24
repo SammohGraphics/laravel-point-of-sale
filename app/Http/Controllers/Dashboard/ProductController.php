@@ -59,7 +59,7 @@ class ProductController extends Controller
     {
         // Validate and store the product
         $validatedData = $this->validateProduct($request);
-        $validatedData['product_code'] = $this->generateProductCode();
+        //$validatedData['product_code'] = $this->generateProductCode();
         $validatedData['product_image'] = $this->handleImageUpload($request, 'product_image', 'public/products/');
 
         Product::create($validatedData);
@@ -72,11 +72,11 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        // Generate Barcode
+        //Generate Barcode
         $generator = new BarcodeGeneratorHTML();
-        $barcode = $generator->getBarcode($product->product_code, $generator::TYPE_CODE_128);
+       // $barcode = $generator->getBarcode($product->product_code, $generator::TYPE_CODE_128);
 
-        return view('products.show', compact('product', 'barcode'));
+        return view('products.show', compact('product'));
     }
 
     /**
@@ -160,6 +160,7 @@ class ProductController extends Controller
     {
         $rules = [
             'product_image' => 'image|file|max:1024',
+            'product_code' => 'required|string',
             'product_name' => 'required|string',
             'category_id' => 'required|integer',
             'supplier_id' => 'required|integer',
@@ -209,6 +210,21 @@ class ProductController extends Controller
             return Redirect::route('products.index')->with('error', 'There was a problem exporting the data to PDF!');
         }
     }
+public function addCart(Request $request)
+{
+    $product = Product::find($request->id);
+    Cart::add([
+        'id' => $product->id,
+        'name' => $product->product_name,
+        'qty' => 1, // Default quantity
+        'price' => $product->selling_price,
+        'options' => [
+            // Other options if needed
+        ]
+    ]);
+
+    return redirect()->back()->with('success', 'Product added to cart successfully!');
+}
 
     /**
      * Generate product code.

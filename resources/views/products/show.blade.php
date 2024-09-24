@@ -22,12 +22,7 @@
                         <div class="form-group col-md-6">
                             <label>Product Code</label>
                             <input type="text" class="form-control bg-white" value="{{  $product->product_code }}" readonly>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Product Barcode</label>
-                            {!! $barcode !!}
-                        </div>
-                    </div>
+                      
                     <!-- end: Show Data -->
                 </div>
             </div>
