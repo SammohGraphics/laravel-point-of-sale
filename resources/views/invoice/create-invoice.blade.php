@@ -11,7 +11,7 @@
                     </div>
 
                     <div class="invoice-btn d-flex">
-                        <form action="{{ route('pos.printInvoice') }}" method="post">
+                        <form action="{{ route('invoice.printInvoice') }}" method="post">
                             @csrf
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
                             <button type="submit" class="btn btn-primary-dark mr-2"><i class="las la-print"></i> Print</button>

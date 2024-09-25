@@ -22,7 +22,7 @@
 
                 @if (auth()->user()->can('pos.menu'))
                 <li class="{{ Request::is('pos*') ? 'active' : '' }}">
-                    <a href="{{ route('pos.index') }}" class="svg-icon">
+                    <a href="{{ route('invoice.index') }}" class="svg-icon">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span class="ml-3">POS</span>
                     </a>
@@ -33,7 +33,7 @@
 
                 @if (auth()->user()->can('pos.menu'))
                 <li class="{{ Request::is('pos*') ? 'active' : '' }}">
-                    <a href="{{ route('pos.index') }}" class="svg-icon">
+                    <a href="{{ route('invoice.index') }}" class="svg-icon">
                         <i class="fas fa-file-invoice"></i>
                         <span class="ml-3">Invoce</span>
                     </a>

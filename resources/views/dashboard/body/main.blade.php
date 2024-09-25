@@ -22,13 +22,15 @@
 
     <!-- Page Specific Styles -->
     @yield('specificpagestyles')
+    @livewireStyles
+
 </head>
 <body>
     <!-- Loader (optional, can be toggled as needed) -->
     <div id="loading" aria-hidden="true" style="display: none;">
         <div id="loading-center"></div>
     </div>
-
+    @livewireScripts
     <!-- Main Wrapper -->
     <div class="wrapper">
         <!-- Sidebar -->
