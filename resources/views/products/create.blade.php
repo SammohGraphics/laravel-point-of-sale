@@ -46,8 +46,18 @@
                         </div>
                         <!-- end: Input Image -->
                         <!-- begin: Input Data -->
+
                         <div class=" row align-items-center">
-                            <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
+                                <label for="product_code">Product code</label>
+                                <input type="text" class="form-control @error('product_code') is-invalid @enderror" id="product_code" name="product_code" value="{{ old('product_code') }}">
+                                @error('product_code')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label for="product_name">Product Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('product_name') is-invalid @enderror" id="product_name" name="product_name" value="{{ old('product_name') }}" required>
                                 @error('product_name')
