@@ -71,6 +71,7 @@
                             <th>No.</th>
                             <th>Photo</th>
                             <th>@sortablelink('product_name', 'name')</th>
+                            <th>@sortablelink('product_code', 'code')</th>
                             <th>@sortablelink('category.name', 'category')</th>
                             <th>@sortablelink('supplier.name', 'supplier')</th>
                             <th>@sortablelink('selling_price', 'price')</th>
@@ -86,6 +87,7 @@
                                 <img class="avatar-60 rounded" src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}">
                             </td>
                             <td>{{ $product->product_name }}</td>
+                            <td>{{ $product->product_code }}</td>
                             <td>{{ $product->category->name }}</td>
                             <td>{{ $product->supplier->name }}</td>
                             <td>{{ $product->selling_price }}</td>
