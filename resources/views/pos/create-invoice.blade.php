@@ -11,45 +11,54 @@
                     </div>
 
                     <div class="invoice-btn d-flex">
-                        <form action="{{ route('invoice.printInvoice') }}" method="post">
+                        <form action="{{ route('pos.printInvoice') }}" method="post">
                             @csrf
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
-                            <button type="submit" class="btn btn-primary-dark mr-2"><i class="las la-print"></i> Print</button>
+                            <button type="submit" class="btn btn-primary-dark mr-2">
+                                <i class="las la-print"></i> Print
+                            </button>
                         </form>
 
-                        <button type="button" class="btn btn-primary-dark mr-2" data-toggle="modal" data-target=".bd-example-modal-lg">Create</button>
+                        <button type="button" class="btn btn-primary-dark mr-2" data-toggle="modal" data-target="#createInvoiceModal">
+                            Create
+                        </button>
 
-                        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                        <!-- Modal -->
+                        <div class="modal fade" id="createInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="createInvoiceModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header bg-white">
                                         <h3 class="modal-title text-center mx-auto">Invoice of {{ $customer->name }}<br/>Total Amount Tsh {{ Cart::total() }}</h3>
                                     </div>
-                                    <form action="{{ route('pos.storeOrder') }}" method="post">
+                                    <form action="{{ route('pos.storeOrder') }}" method="post" id="invoiceForm">
                                         @csrf
                                         <div class="modal-body">
                                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
 
+                                            <!-- Payment Status -->
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="payment_status">Payment</label>
-                                                    <select class="form-control @error('payment_status') is-invalid @enderror" name="payment_status">
+                                                    <select class="form-control @error('payment_status') is-invalid @enderror" name="payment_status" id="payment_status" required>
                                                         <option selected="" disabled="">-- Select Payment --</option>
-                                                        <option value="HandCash">HandCash</option>
-                                                        <option value="Cheque">Cheque</option>
-                                                        <option value="Due">Due</option>
+                                                        <option value="HandCash" {{ old('payment_status') == 'HandCash' ? 'selected' : '' }}>HandCash</option>
+                                                        <option value="Cheque" {{ old('payment_status') == 'Cheque' ? 'selected' : '' }}>Cheque</option>
+                                                        <option value="Due" {{ old('payment_status') == 'Due' ? 'selected' : '' }}>Due</option>
                                                     </select>
                                                     @error('payment_status')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
                                                     @enderror
                                                 </div>
                                             </div>
+
+
+                                            <!-- Pay Now -->
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="pay">Pay Now</label>
-                                                    <input type="text" class="form-control @error('pay') is-invalid @enderror" id="pay" name="pay" value="{{ old('pay') }}">
+                                                    <input type="number" class="form-control @error('pay') is-invalid @enderror" id="pay" name="pay" value="{{ old('pay') }}" required>
                                                     @error('pay')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
@@ -70,6 +79,14 @@
                 </div>
 
                 <div class="card-body">
+                    @if(session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">{{ session('error') }}</div>
+                    @endif
+
                     <div class="row">
                         <div class="col-sm-12">
                             <img src="{{ asset('assets/images/logo.png') }}" class="logo-invoice img-fluid mb-3">
@@ -77,6 +94,7 @@
                         </div>
                     </div>
 
+                    <!-- Invoice Details -->
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="table-responsive-sm">
@@ -90,11 +108,11 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{{ Carbon\Carbon::now()->format('M d, Y') }}</td>
+                                            <td>{{ now()->format('M d, Y') }}</td>
                                             <td><span class="badge badge-danger">Unpaid</span></td>
                                             <td>
                                                 <p class="mb-0">{{ $customer->address }}<br>
-                                                    Shop Name: {{ $customer->shopname ? $customer->shopname : '-' }}<br>
+                                                    Shop Name: {{ $customer->shopname ?: '-' }}<br>
                                                     Phone: {{ $customer->phone }}<br>
                                                     Email: {{ $customer->email }}<br>
                                                 </p>
@@ -106,6 +124,7 @@
                         </div>
                     </div>
 
+                    <!-- Order Summary -->
                     <div class="row">
                         <div class="col-sm-12">
                             <h5 class="mb-3">Order Summary</h5>
@@ -131,7 +150,6 @@
                                             <td class="text-center">{{ $item->price }}</td>
                                             <td class="text-center"><b>{{ $item->subtotal }}</b></td>
                                         </tr>
-
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -139,16 +157,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <b class="text-danger">Notes:</b>
-                            <p class="mb-0">It is a long established fact that a reader will be distracted by the readable content of a page
-                                when looking
-                                at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters,
-                                as opposed to using 'Content here, content here', making it look like readable English.</p>
-                        </div>
-                    </div>
-
+                    <!-- Order Details -->
                     <div class="row mt-4 mb-3">
                         <div class="offset-lg-8 col-lg-4">
                             <div class="or-detail rounded">
@@ -175,4 +184,38 @@
         </div>
     </div>
 </div>
+
+<!-- Client-Side Validation -->
+<script>
+    document.getElementById('invoiceForm').addEventListener('submit', function (e) {
+        const paymentStatus = document.getElementById('payment_status');
+        const payField = document.getElementById('pay');
+
+        if (!paymentStatus.value) {
+            alert('Please select a payment method.');
+            e.preventDefault();
+        }
+
+        if (!payField.value || isNaN(payField.value) || parseFloat(payField.value) <= 0) {
+            alert('Please enter a valid amount to pay.');
+            e.preventDefault();
+        }
+    });
+
+    document.getElementById('invoiceForm').addEventListener('submit', function (e) {
+        const paymentStatus = document.getElementById('payment_status');
+        const payField = document.getElementById('pay');
+
+        if (!paymentStatus.value) {
+            alert('Please select a payment method.');
+            e.preventDefault(); // Prevent form submission if validation fails
+        }
+
+        if (!payField.value || isNaN(payField.value) || parseFloat(payField.value) <= 0) {
+            alert('Please enter a valid amount to pay.');
+            e.preventDefault(); // Prevent form submission if validation fails
+        }
+    });
+</script>
+
 @endsection

@@ -95,18 +95,43 @@ Route::middleware(['permission:category.menu'])->group(function () {
 });
 
 // ====== POS ======
-Route::middleware(['permission:pos.menu'])->group(function () {
-    Route::get('/invoice', [PosController::class,'index'])->name('invoice.index');
-    Route::post('/invoice/add', [PosController::class, 'addCart'])->name('invoice.addCart');
-    Route::post('/invoice/update/{rowId}', [PosController::class, 'updateCart'])->name('invoice.updateCart');
-    Route::get('/ivoice/delete/{rowId}', [PosController::class, 'deleteCart'])->name('invoice.deleteCart');
-    Route::post('/invoice/invoice/create', [PosController::class, 'createInvoice'])->name('invoice.createInvoice');
-    Route::post('/invoice/invoice/print', [PosController::class, 'printInvoice'])->name('invoice.printInvoice');
-    Route::get('/invoice/liveSearch', [PosController::class, 'liveSearch'])->name('invoice.liveSearch');
+// Route::middleware(['permission:pos.menu'])->group(function () {
+//     Route::get('/invoice', [PosController::class,'index'])->name('invoice.index');
+//     Route::post('/invoice/add', [PosController::class, 'addCart'])->name('invoice.addCart');
+//     Route::post('/invoice/update/{rowId}', [PosController::class, 'updateCart'])->name('invoice.updateCart');
+//     Route::get('/ivoice/delete/{rowId}', [PosController::class, 'deleteCart'])->name('invoice.deleteCart');
+//     Route::post('/invoice/invoice/create', [PosController::class, 'createInvoice'])->name('invoice.createInvoice');
+//     Route::post('/invoice/invoice/print', [PosController::class, 'printInvoice'])->name('invoice.printInvoice');
+//     Route::get('/invoice/liveSearch', [PosController::class, 'liveSearch'])->name('invoice.liveSearch');
 
 
     // Create Order
-    Route::post('/invoice/order', [OrderController::class, 'storeOrder'])->name('pos.storeOrder');
+//     Route::post('/invoice/order', [OrderController::class, 'storeOrder'])->name('pos.storeOrder');
+// });
+
+// ====== POS ======
+Route::middleware(['permission:pos.menu'])->group(function () {
+    Route::get('/pos', [PosController::class,'index'])->name('pos.index');
+    Route::post('/pos/add', [PosController::class, 'addCart'])->name('pos.addCart');
+    Route::post('/pos/update/{rowId}', [PosController::class, 'updateCart'])->name('pos.updateCart');
+    Route::get('/pos/delete/{rowId}', [PosController::class, 'deleteCart'])->name('pos.deleteCart');
+    Route::post('/pos/invoice/create', [PosController::class, 'createInvoice'])->name('pos.createInvoice');
+    Route::post('/pos/invoice/print', [PosController::class, 'printInvoice'])->name('pos.printInvoice');
+
+    Route::post('pos/addCart', [PosController::class, 'addCart'])->name('pos.addCart');
+    Route::post('pos/update/{rowId}', [PosController::class, 'updateCart'])->name('pos.updateCart');
+    Route::get('pos/delete/{rowId}', [PosController::class, 'deleteCart'])->name('pos.deleteCart');
+    Route::get('pos/searchByCode', [PosController::class, 'searchByCode'])->name('pos.searchByCode');
+    Route::get('pos/searchByName', [PosController::class, 'searchByName'])->name('pos.searchByName');
+
+    Route::get('/pos/searchByCode', [PosController::class, 'searchByCode'])->name('pos.searchByCode');
+    Route::get('/pos/liveSearch', [PosController::class, 'liveSearch'])->name('pos.liveSearch');
+    Route::get('/pos/getProductById', [PosController::class, 'getProductById'])->name('pos.getProductById');
+    Route::post('pos/update/{rowId}', [PosController::class, 'updateCart'])->name('pos.updateCart');
+
+
+    // Create Order
+    Route::post('/pos/order', [OrderController::class, 'storeOrder'])->name('pos.storeOrder');
 });
 
 // ====== ORDERS ======

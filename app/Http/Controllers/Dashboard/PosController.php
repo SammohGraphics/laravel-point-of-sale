@@ -21,7 +21,7 @@ class PosController extends Controller
             abort(400, 'The per-page parameter must be an integer between 1 and 100.');
         }
 
-        return view('invoice.index', [
+        return view('pos.index', [
             'customers' => Customer::all()->sortBy('name'),
             'productItem' => Cart::content(),
             'products' => Product::where('expire_date', '>', $todayDate)
@@ -31,6 +31,8 @@ class PosController extends Controller
                 ->appends(request()->query()),
         ]);
     }
+
+    
 
     public function liveSearch(Request $request)
     {
@@ -100,7 +102,7 @@ class PosController extends Controller
             return redirect()->back()->withErrors(['error' => 'You cannot create an invoice with zero items in the cart.']);
         }
 
-        return view('invoice.create-invoice', [
+        return view('pos.create-invoice', [
             'customer' => $customer,
             'content' => $content
         ]);
@@ -116,7 +118,7 @@ class PosController extends Controller
         $customer = Customer::where('id', $validatedData['customer_id'])->first();
         $content = Cart::content();
 
-        return view('invoice.print-invoice', [
+        return view('pos.print-invoice', [
             'customer' => $customer,
             'content' => $content
         ]);

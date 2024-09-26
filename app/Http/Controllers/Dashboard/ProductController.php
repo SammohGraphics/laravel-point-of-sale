@@ -153,13 +153,22 @@ class ProductController extends Controller
         return $this->exportToPDF($products); // PDF Export only
     }
 
+    protected function getImageUrl($imageName)
+    {
+        if (!$imageName) {
+            return null; // Return null if no image is uploaded
+        }
+
+        return Storage::url('public/products/' . $imageName);
+    }
+
     /**
      * Validate product data.
      */
     protected function validateProduct(Request $request, $id = null)
     {
         $rules = [
-            'product_image' => 'image|file|max:1024',
+            'product_image' => 'image|mimes:jpeg,png,jpg,gif|max:1024',
             'product_code' => 'required|string',
             'product_name' => 'required|string',
             'category_id' => 'required|integer',
@@ -173,7 +182,7 @@ class ProductController extends Controller
         ];
 
         if ($id) {
-            $rules['product_image'] = 'sometimes|image|file|max:1024';
+            $rules['product_image'] = 'sometimes|image|mimes:jpeg,png,jpg,gif|max:1024';
         }
 
         return $request->validate($rules);

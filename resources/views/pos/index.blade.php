@@ -34,7 +34,7 @@
                         <tr>
                             <td>{{ $item->name }}</td>
                             <td style="min-width: 140px;">
-                                <form action="{{ route('invoice.updateCart', $item->rowId) }}" method="POST">
+                                <form action="{{ route('pos.updateCart', $item->rowId) }}" method="POST">
                                     @csrf
                                     <div class="input-group">
                                         <input type="number" class="form-control" name="qty" required min="1" max="100" value="{{ old('qty', $item->qty) }}">
@@ -47,7 +47,7 @@
                             <td>{{ $item->price }}</td>
                             <td>{{ $item->subtotal }}</td>
                             <td>
-                                <a href="{{ route('invoice.deleteCart', $item->rowId) }}" class="btn btn-danger border-none" title="Delete"><i class="fa-solid fa-trash mr-0"></i></a>
+                                <a href="{{ route('pos.deleteCart', $item->rowId) }}" class="btn btn-danger border-none" title="Delete"><i class="fa-solid fa-trash mr-0"></i></a>
                             </td>
                         </tr>
                     @endforeach
@@ -69,7 +69,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('invoice.createInvoice') }}" method="POST">
+            <form action="{{ route('pos.createInvoice') }}" method="POST">
                 @csrf
                 <div class="row mt-3">
                     <div class="col-md-12">
@@ -148,7 +148,7 @@
                                         <td>{{ $product->product_name }}</td>
                                         <td>{{ $product->selling_price }}</td>
                                         <td>
-                                            <form action="{{ route('invoice.addCart') }}" method="POST">
+                                            <form action="{{ route('pos.addCart') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $product->id }}">
                                                 <input type="hidden" name="name" value="{{ $product->product_name }}">
@@ -179,7 +179,7 @@ $(document).ready(function(){
         let query = $(this).val();
 
         $.ajax({
-            url: "{{ route('invoice.liveSearch') }}",
+            url: "{{ route('pos.liveSearch') }}",
             type: 'GET',
             data: { search: query },
             success: function(data) {
@@ -191,7 +191,7 @@ $(document).ready(function(){
                         tableRow += '<td><img class="avatar-60 rounded" src="' + (product.product_image ? '/storage/products/' + product.product_image : '/assets/images/product/default.webp') + '" /></td>';
                         tableRow += '<td>' + product.product_name + '</td>';
                         tableRow += '<td>' + product.selling_price + '</td>';
-                        tableRow += '<td><form action="{{ route('invoice.addCart') }}" method="POST">@csrf<input type="hidden" name="id" value="' + product.id + '"><input type="hidden" name="name" value="' + product.product_name + '"><input type="hidden" name="price" value="' + product.selling_price + '"><button type="submit" class="btn btn-primary"><i class="far fa-plus"></i></button></form></td>';
+                        tableRow += '<td><form action="{{ route('pos.addCart') }}" method="POST">@csrf<input type="hidden" name="id" value="' + product.id + '"><input type="hidden" name="name" value="' + product.product_name + '"><input type="hidden" name="price" value="' + product.selling_price + '"><button type="submit" class="btn btn-primary"><i class="far fa-plus"></i></button></form></td>';
                         tableRow += '</tr>';
                     });
                 } else {
