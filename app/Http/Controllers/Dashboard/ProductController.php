@@ -59,7 +59,6 @@ class ProductController extends Controller
     {
         // Validate and store the product
         $validatedData = $this->validateProduct($request);
-        //$validatedData['product_code'] = $this->generateProductCode();
         $validatedData['product_image'] = $this->handleImageUpload($request, 'product_image', 'public/products/');
 
         Product::create($validatedData);
@@ -72,9 +71,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //Generate Barcode
+        // Generate Barcode
         $generator = new BarcodeGeneratorHTML();
-       // $barcode = $generator->getBarcode($product->product_code, $generator::TYPE_CODE_128);
+        // $barcode = $generator->getBarcode($product->product_code, $generator::TYPE_CODE_128);
 
         return view('products.show', compact('product'));
     }
@@ -153,36 +152,26 @@ class ProductController extends Controller
         return $this->exportToPDF($products); // PDF Export only
     }
 
-    protected function getImageUrl($imageName)
-    {
-        if (!$imageName) {
-            return null; // Return null if no image is uploaded
-        }
-
-        return Storage::url('public/products/' . $imageName);
-    }
-
     /**
      * Validate product data.
      */
     protected function validateProduct(Request $request, $id = null)
     {
         $rules = [
-            'product_image' => 'image|mimes:jpeg,png,jpg,gif|max:1024',
-            'product_code' => 'required|string',
-            'product_name' => 'required|string',
-            'category_id' => 'required|integer',
-            'supplier_id' => 'required|integer',
-            'product_garage' => 'string|nullable',
-            'product_store' => 'string|nullable',
-            'buying_date' => 'date_format:Y-m-d|nullable',
-            'expire_date' => 'date_format:Y-m-d|nullable',
-            'buying_price' => 'required|integer',
-            'selling_price' => 'required|integer',
+            'product_image' => 'nullable|image|file|max:1024',
+            'product_code' => 'required|string|unique:products,product_code,' . $id,
+            'product_name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'product_garage' => 'nullable|string|max:255',
+            'product_store' => 'nullable|string|max:255',
+            'buying_date' => 'nullable|date_format:Y-m-d',
+            'expire_date' => 'nullable|date_format:Y-m-d|after:buying_date',
+            'buying_price' => 'required|numeric|min:0|regex:/^\d+(\.\d{1,2})?$/',
+            'selling_price' => 'required|numeric|min:0|regex:/^\d+(\.\d{1,2})?$/',
         ];
-
         if ($id) {
-            $rules['product_image'] = 'sometimes|image|mimes:jpeg,png,jpg,gif|max:1024';
+            $rules['product_image'] = 'sometimes|image|file|max:1024'; // Allow image update but not required
         }
 
         return $request->validate($rules);
@@ -197,6 +186,7 @@ class ProductController extends Controller
             $fileName = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
             $file->storeAs($path, $fileName);
 
+            // Delete the old image if it exists
             if ($oldFile) {
                 Storage::delete($path . $oldFile);
             }
@@ -210,7 +200,7 @@ class ProductController extends Controller
     /**
      * Export data to PDF.
      */
-    protected function exportToPDF($products)
+    public function exportToPDF($products)
     {
         try {
             $pdf = PDF::loadView('products.pdf', ['products' => $products]);
@@ -219,21 +209,26 @@ class ProductController extends Controller
             return Redirect::route('products.index')->with('error', 'There was a problem exporting the data to PDF!');
         }
     }
-public function addCart(Request $request)
-{
-    $product = Product::find($request->id);
-    Cart::add([
-        'id' => $product->id,
-        'name' => $product->product_name,
-        'qty' => 1, // Default quantity
-        'price' => $product->selling_price,
-        'options' => [
-            // Other options if needed
-        ]
-    ]);
 
-    return redirect()->back()->with('success', 'Product added to cart successfully!');
-}
+
+    /**
+     * Add product to cart.
+     */
+    public function addCart(Request $request)
+    {
+        $product = Product::find($request->id);
+        Cart::add([
+            'id' => $product->id,
+            'name' => $product->product_name,
+            'qty' => 1, // Default quantity
+            'price' => $product->selling_price,
+            'options' => [
+                // Other options if needed
+            ]
+        ]);
+
+        return redirect()->back()->with('success', 'Product added to cart successfully!');
+    }
 
     /**
      * Generate product code.
