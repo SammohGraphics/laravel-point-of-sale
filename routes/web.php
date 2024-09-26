@@ -103,6 +103,9 @@ Route::middleware(['permission:pos.menu'])->group(function () {
     Route::get('/pos/delete/{rowId}', [PosController::class, 'deleteCart'])->name('pos.deleteCart');
     Route::post('/pos/invoice/create', [PosController::class, 'createInvoice'])->name('pos.createInvoice');
     Route::post('/pos/invoice/print', [PosController::class, 'printInvoice'])->name('pos.printInvoice');
+    //invoive
+Route::post('/save-order', [InvoiceController::class, 'createOrder'])->name('saveOrder');
+
 
     Route::post('pos/addCart', [PosController::class, 'addCart'])->name('pos.addCart');
     Route::post('pos/update/{rowId}', [PosController::class, 'updateCart'])->name('pos.updateCart');
@@ -171,5 +174,6 @@ Route::middleware(['permission:roles.menu'])->group(function () {
     Route::put('/role/permission/{id}', [RoleController::class, 'rolePermissionUpdate'])->name('rolePermission.update');
     Route::delete('/role/permission/{id}', [RoleController::class, 'rolePermissionDestroy'])->name('rolePermission.destroy');
 });
+
 
 require __DIR__.'/auth.php';
