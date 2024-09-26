@@ -13,10 +13,11 @@
                 </div>
             @endif
             <div>
-                <h4 class="mb-3">Point of Sale</h4>
+                <h4 class="mb-3">Create Invoice</h4>
             </div>
         </div>
 
+        <!-- Cart and Invoice Section -->
         <div class="col-lg-6 col-md-12 mb-3">
             <table class="table" id="sellingTable">
                 <thead>
@@ -38,7 +39,7 @@
                                 <div class="input-group">
                                     <input type="number" class="form-control" name="qty" required value="{{ old('qty', $item->qty) }}">
                                     <div class="input-group-append">
-                                        <button type="submit" class="btn btn-success border-none" data-toggle="tooltip" title="Submit"><i class="fas fa-check"></i></button>
+                                        <button type="submit" class="btn btn-success border-none" data-toggle="tooltip" data-placement="top" title="" data-original-title="Sumbit"><i class="fas fa-check"></i></button>
                                     </div>
                                 </div>
                             </form>
@@ -46,24 +47,24 @@
                         <td>{{ $item->price }}</td>
                         <td>{{ $item->subtotal }}</td>
                         <td>
-                            <a href="{{ route('pos.deleteCart', $item->rowId) }}" class="btn btn-danger border-none" data-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash mr-0"></i></a>
+                            <a href="{{ route('pos.deleteCart', $item->rowId) }}" class="btn btn-danger border-none" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa-solid fa-trash mr-0"></i></a>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
 
-            <div class="container row text-center">
-                <div class="form-group col-sm-6">
+            <div class="row text-center">
+                <div class="col-sm-6">
                     <p class="h4 text-primary">Quantity: {{ Cart::count() }}</p>
                 </div>
-                <div class="form-group col-sm-6">
+                <div class="col-sm-6">
                     <p class="h4 text-primary">Subtotal: {{ Cart::subtotal() }}</p>
                 </div>
-                <div class="form-group col-sm-6">
+                <div class="col-sm-6">
                     <p class="h4 text-primary">Vat: {{ Cart::tax() }}</p>
                 </div>
-                <div class="form-group col-sm-6">
+                <div class="col-sm-6">
                     <p class="h4 text-primary">Total: {{ Cart::total() }}</p>
                 </div>
             </div>
@@ -73,10 +74,10 @@
                 <div class="row mt-3">
                     <div class="col-md-12">
                         <div class="input-group">
-                            <select class="form-control" id="customer_id" name="customer_id">
-                                <option selected="" disabled="">-- Select Customer --</option>
+                            <select class="form-control @error('customer_id') is-invalid @enderror" id="customer_id" name="customer_id" required>
+                                <option selected disabled>-- Select Customer --</option>
                                 @foreach ($customers as $customer)
-                                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                    <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -87,38 +88,38 @@
                         @enderror
                     </div>
                     <div class="col-md-12 mt-4">
-                        <div class="d-flex flex-wrap align-items-center justify-content-center">
-                            <a href="{{ route('customers.create') }}" class="btn btn-primary add-list mx-1">Add Customer</a>
-                            <button type="submit" class="btn btn-success add-list mx-1">Create Invoice</button>
+                        <div class="d-flex justify-content-center">
+                            <a href="{{ route('customers.create') }}" class="btn btn-primary mx-1">Add Customer</a>
+                            <button type="submit" class="btn btn-success mx-1">Create Invoice</button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
 
+        <!-- Product Search Section -->
         <div class="col-lg-6 col-md-12">
             <div class="card card-block card-stretch card-height">
                 <div class="card-body">
-                    <form action="#" method="get">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between">
+                    <form action="#" method="get" class="mb-3">
+                        <div class="d-flex flex-wrap justify-content-between">
                             <div class="form-group row">
                                 <label for="row" class="align-self-center mx-2">Row:</label>
                                 <div>
                                     <select class="form-control" name="row">
-                                        <option value="10" @if(request('row') == '10')selected="selected"@endif>10</option>
-                                        <option value="25" @if(request('row') == '25')selected="selected"@endif>25</option>
-                                        <option value="50" @if(request('row') == '50')selected="selected"@endif>50</option>
-                                        <option value="100" @if(request('row') == '100')selected="selected"@endif>100</option>
+                                        <option value="10" {{ request('row') == '10' ? 'selected' : '' }}>10</option>
+                                        <option value="25" {{ request('row') == '25' ? 'selected' : '' }}>25</option>
+                                        <option value="50" {{ request('row') == '50' ? 'selected' : '' }}>50</option>
+                                        <option value="100" {{ request('row') == '100' ? 'selected' : '' }}>100</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="form-group row">
                                 <label class="control-label col-sm-3 align-self-center" for="search">Search:</label>
                                 <div class="input-group col-sm-8">
                                     <input type="text" id="search" class="form-control" name="search" placeholder="Search product" value="{{ request('search') }}">
                                     <div class="input-group-append">
-                                        <button type="submit" class="input-group-text bg-primary"><i class="fa-solid fa-magnifying-glass font-size-20"></i></button>
+                                        <button type="submit" class="input-group-text bg-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
                                         <a href="{{ route('products.index') }}" class="input-group-text bg-danger"><i class="fa-solid fa-trash"></i></a>
                                     </div>
                                 </div>
@@ -126,10 +127,11 @@
                         </div>
                     </form>
 
+
                     <div class="table-responsive rounded mb-3 border-none">
                         <table class="table mb-0">
                             <thead class="bg-white text-uppercase">
-                                <tr class="ligth ligth-data">
+                                <tr>
                                     <th>No.</th>
                                     <th>Photo</th>
                                     <th>@sortablelink('product_name', 'name')</th>
@@ -140,27 +142,29 @@
                             <tbody class="ligth-body">
                                 @forelse ($products as $product)
                                 <tr>
-                                    <td>{{ (($products->currentPage() * 10) - 10) + $loop->iteration }}</td>
+                                    <td>{{ (($products->currentPage() * 10) - 10) + $loop->iteration  }}</td>
                                     <td>
                                         <img class="avatar-60 rounded" src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}">
                                     </td>
                                     <td>{{ $product->product_name }}</td>
                                     <td>{{ $product->selling_price }}</td>
                                     <td>
-                                        <form action="{{ route('pos.addCart') }}" method="POST" style="margin-bottom: 5px">
+                                        <form action="{{ route('pos.addCart') }}" method="POST"  style="margin-bottom: 5px">
                                             @csrf
                                             <input type="hidden" name="id" value="{{ $product->id }}">
                                             <input type="hidden" name="name" value="{{ $product->product_name }}">
                                             <input type="hidden" name="price" value="{{ $product->selling_price }}">
-                                            <button type="submit" class="btn btn-primary border-none" data-toggle="tooltip" title="Add"><i class="far fa-plus mr-0"></i></button>
+
+                                            <button type="submit" class="btn btn-primary border-none" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add"><i class="far fa-plus mr-0"></i></button>
                                         </form>
                                     </td>
                                 </tr>
+
                                 @empty
                                 <div class="alert text-white bg-danger" role="alert">
                                     <div class="iq-alert-text">Data not Found.</div>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <i class="ri-close-line"></i>
+                                    <i class="ri-close-line"></i>
                                     </button>
                                 </div>
                                 @endforelse
@@ -173,81 +177,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        // Barcode scanning and adding to table when pressing Enter
-        $('#search').on('keypress', function(e) {
-            if (e.which == 13) { // Enter key pressed
-                e.preventDefault(); // Prevent form submission on Enter
-                let inputVal = $(this).val();
-
-                // AJAX call to search product by code first
-                $.ajax({
-                    url: '{{ route('pos.searchByCode') }}', // Make sure this route exists
-                    method: 'GET',
-                    data: { product_code: inputVal },
-                    success: function(data) {
-                        if (data.product) {
-                            addToSellingTable(data.product);
-                            $('#search').val(''); // Clear the input field
-                        } else {
-                            alert('Product not found');
-                        }
-                    }
-                });
-            }
-        });
-
-        // Live Search when typing product name
-        $('#search').on('keyup', function() {
-            let inputVal = $(this).val();
-            if (inputVal.length > 2) { // Search when input has more than 2 characters
-                $.ajax({
-                    url: '{{ route('pos.searchByName') }}', // Ensure this route exists
-                    method: 'GET',
-                    data: { product_name: inputVal },
-                    success: function(data) {
-                        // Clear current table and append search results
-                        $('#sellingTable tbody').empty();
-                        data.products.forEach(function(product) {
-                            addToSellingTable(product);
-                        });
-                    }
-                });
-            }
-        });
-    });
-
-    // Function to add product to the selling table
-    function addToSellingTable(product) {
-        let updateUrl = "{{ route('pos.updateCart', ':rowId') }}".replace(':rowId', product.rowId);
-        let deleteUrl = "{{ route('pos.deleteCart', ':rowId') }}".replace(':rowId', product.rowId);
-
-        // Create a new row
-        let newRow = `<tr>
-            <td>${product.product_name}</td>
-            <td>
-                <form action="${updateUrl}" method="POST">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <div class="input-group">
-                        <input type="number" class="form-control" name="qty" required value="1">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-success border-none" data-toggle="tooltip" title="Submit"><i class="fas fa-check"></i></button>
-                        </div>
-                    </div>
-                </form>
-            </td>
-            <td>${product.selling_price}</td>
-            <td>${product.selling_price}</td>
-            <td>
-                <a href="${deleteUrl}" class="btn btn-danger border-none" data-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash"></i></a>
-            </td>
-        </tr>`;
-
-        // Append the new row to the selling table
-        $('#sellingTable tbody').append(newRow);
-    }
-</script>
 @endsection
 

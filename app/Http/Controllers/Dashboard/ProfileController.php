@@ -44,6 +44,21 @@ class ProfileController extends Controller
         ]);
     }
 
+
+    public function showProfile()
+    {
+        $user = auth()->user();
+
+        // Assuming the user has a role relationship
+        $role = $user->roles()->first()->name ?? 'Unknown'; // Fetch the role, or default to 'Unknown'
+
+        // Pass the user and role to the view
+        return view('profile.index', compact('user', 'role'));
+    }
+
+
+
+
     /**
      * Update the specified resource in storage.
      */
@@ -63,6 +78,8 @@ class ProfileController extends Controller
         if ($validatedData['email'] != $user->email) {
             $validatedData['email_verified_at'] = null;
         }
+
+
 
         /**
          * Handle upload image with Storage.

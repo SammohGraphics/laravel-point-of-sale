@@ -19,6 +19,15 @@
         th {
             background-color: #f2f2f2;
         }
+        img {
+            width: 80px; /* Set a fixed size for images */
+            height: 80px;
+            object-fit: cover; /* Ensure images maintain aspect ratio */
+        }
+        .no-image {
+            font-style: italic;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -26,23 +35,33 @@
     <table>
         <thead>
             <tr>
-                <th>Product Code</th>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Supplier</th>
-                <th>Buying Price</th>
-                <th>Selling Price</th>
+                <th>S/N</th> <!-- Add Serial Number Column -->
+                <th>PRODUCT CODE</th>
+                <th>PRODUCT IMAGE</th>
+                <th>PRODUCT NAME</th>
+                {{-- <th>CATEGORY</th> --}}
+                <th>SUPPLIER</th>
+                <th>UNIT</th>
+                <th>PRICE</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($products as $product)
+            @foreach ($products as $index => $product) <!-- Use $index for Serial Number -->
                 <tr>
+                    <td>{{ $index + 1 }}</td> <!-- Display Serial Number -->
                     <td>{{ $product['product_code'] }}</td>
+                    <td>
+                        @if($product['product_image'])
+                            <img src="{{ asset('assets/images/products/' . $product['product_image']) }}" alt="Product Image">
+                        @else
+                            <span class="no-image">No image</span> <!-- Display placeholder for missing images -->
+                        @endif
+                    </td>
                     <td>{{ $product['product_name'] }}</td>
-                    <td>{{ $product['category']['name'] }}</td>
+                    {{-- <td>{{ $product['category']['name'] }}</td> --}}
                     <td>{{ $product['supplier']['name'] }}</td>
-                    <td>{{ $product['buying_price'] }}</td>
-                    <td>{{ $product['selling_price'] }}</td>
+                    <td>{{ $product['product_garage'] ?? 'N/A' }}</td> <!-- Handle null values gracefully -->
+                    <td>{{ number_format($product['selling_price'], 2) }}</td> <!-- Price formatted with commas and decimals -->
                 </tr>
             @endforeach
         </tbody>

@@ -46,7 +46,11 @@
                         </div>
                         <!-- end: Input Image -->
                         <!-- begin: Input Data -->
+<<<<<<< HEAD
                         
+=======
+
+>>>>>>> 216067ddc3aa8dbf38cfa43b38f9fecbaada20f2
                         <div class=" row align-items-center">
                         <div class="form-group col-md-6">
                                 <label for="product_code">Product code</label>
@@ -95,7 +99,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="product_garage">Product Garage</label>
+                                <label for="product_garage">Product Pieces</label>
                                 <input type="text" class="form-control @error('product_garage') is-invalid @enderror" id="product_garage" name="product_garage" value="{{ old('product_garage') }}">
                                 @error('product_garage')
                                 <div class="invalid-feedback">

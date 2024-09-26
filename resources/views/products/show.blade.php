@@ -22,7 +22,11 @@
                         <div class="form-group col-md-6">
                             <label>Product Code</label>
                             <input type="text" class="form-control bg-white" value="{{  $product->product_code }}" readonly>
+<<<<<<< HEAD
                       
+=======
+
+>>>>>>> 216067ddc3aa8dbf38cfa43b38f9fecbaada20f2
                     <!-- end: Show Data -->
                 </div>
             </div>

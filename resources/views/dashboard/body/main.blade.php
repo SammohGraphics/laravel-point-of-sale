@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="POS Dashboard">
     <meta name="author" content="Your Company">
@@ -21,13 +22,15 @@
 
     <!-- Page Specific Styles -->
     @yield('specificpagestyles')
+    @livewireStyles
+
 </head>
 <body>
     <!-- Loader (optional, can be toggled as needed) -->
     <div id="loading" aria-hidden="true" style="display: none;">
         <div id="loading-center"></div>
     </div>
-
+    @livewireScripts
     <!-- Main Wrapper -->
     <div class="wrapper">
         <!-- Sidebar -->

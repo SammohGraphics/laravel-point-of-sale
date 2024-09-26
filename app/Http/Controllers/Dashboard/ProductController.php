@@ -59,7 +59,10 @@ class ProductController extends Controller
     {
         // Validate and store the product
         $validatedData = $this->validateProduct($request);
+<<<<<<< HEAD
         //$validatedData['product_code'] = $this->generateProductCode();
+=======
+>>>>>>> 216067ddc3aa8dbf38cfa43b38f9fecbaada20f2
         $validatedData['product_image'] = $this->handleImageUpload($request, 'product_image', 'public/products/');
 
         Product::create($validatedData);
@@ -74,7 +77,11 @@ class ProductController extends Controller
     {
         //Generate Barcode
         $generator = new BarcodeGeneratorHTML();
+<<<<<<< HEAD
        // $barcode = $generator->getBarcode($product->product_code, $generator::TYPE_CODE_128);
+=======
+        // $barcode = $generator->getBarcode($product->product_code, $generator::TYPE_CODE_128);
+>>>>>>> 216067ddc3aa8dbf38cfa43b38f9fecbaada20f2
 
         return view('products.show', compact('product'));
     }
@@ -159,6 +166,7 @@ class ProductController extends Controller
     protected function validateProduct(Request $request, $id = null)
     {
         $rules = [
+<<<<<<< HEAD
             'product_image' => 'image|file|max:1024',
             'product_code' => 'required|string',
             'product_name' => 'required|string',
@@ -170,10 +178,22 @@ class ProductController extends Controller
             'expire_date' => 'date_format:Y-m-d|nullable',
             'buying_price' => 'required|integer',
             'selling_price' => 'required|integer',
+=======
+            'product_image' => 'nullable|image|file|max:1024',
+            'product_code' => 'required|string|unique:products,product_code,' . $id,
+            'product_name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'product_garage' => 'nullable|string|max:255',
+            'product_store' => 'nullable|string|max:255',
+            'buying_date' => 'nullable|date_format:Y-m-d',
+            'expire_date' => 'nullable|date_format:Y-m-d|after:buying_date',
+            'buying_price' => 'required|numeric|min:0|regex:/^\d+(\.\d{1,2})?$/',
+            'selling_price' => 'required|numeric|min:0|regex:/^\d+(\.\d{1,2})?$/',
+>>>>>>> 216067ddc3aa8dbf38cfa43b38f9fecbaada20f2
         ];
-
         if ($id) {
-            $rules['product_image'] = 'sometimes|image|file|max:1024';
+            $rules['product_image'] = 'sometimes|image|file|max:1024'; // Allow image update but not required
         }
 
         return $request->validate($rules);
@@ -188,6 +208,7 @@ class ProductController extends Controller
             $fileName = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
             $file->storeAs($path, $fileName);
 
+            // Delete the old image if it exists
             if ($oldFile) {
                 Storage::delete($path . $oldFile);
             }
@@ -201,7 +222,7 @@ class ProductController extends Controller
     /**
      * Export data to PDF.
      */
-    protected function exportToPDF($products)
+    public function exportToPDF($products)
     {
         try {
             $pdf = PDF::loadView('products.pdf', ['products' => $products]);
@@ -225,6 +246,26 @@ public function addCart(Request $request)
 
     return redirect()->back()->with('success', 'Product added to cart successfully!');
 }
+
+
+    /**
+     * Add product to cart.
+     */
+    public function addCart(Request $request)
+    {
+        $product = Product::find($request->id);
+        Cart::add([
+            'id' => $product->id,
+            'name' => $product->product_name,
+            'qty' => 1, // Default quantity
+            'price' => $product->selling_price,
+            'options' => [
+                // Other options if needed
+            ]
+        ]);
+
+        return redirect()->back()->with('success', 'Product added to cart successfully!');
+    }
 
     /**
      * Generate product code.

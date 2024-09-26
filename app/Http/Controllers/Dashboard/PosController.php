@@ -24,11 +24,27 @@ class PosController extends Controller
         return view('pos.index', [
             'customers' => Customer::all()->sortBy('name'),
             'productItem' => Cart::content(),
-            'products' => Product::where('expire_date', '>', $todayDate)->filter(request(['search']))
+            'products' => Product::where('expire_date', '>', $todayDate)
+                ->filter(request(['search']))
                 ->sortable()
                 ->paginate($row)
                 ->appends(request()->query()),
         ]);
+    }
+
+    
+
+    public function liveSearch(Request $request)
+    {
+        $search = $request->input('search');
+        $todayDate = Carbon::now();
+
+        $products = Product::where('expire_date', '>', $todayDate)
+            ->where('product_name', 'like', '%' . $search . '%')
+            ->limit(10)
+            ->get();
+
+        return response()->json($products);
     }
 
     public function addCart(Request $request)
@@ -82,6 +98,10 @@ class PosController extends Controller
         $customer = Customer::where('id', $validatedData['customer_id'])->first();
         $content = Cart::content();
 
+        if (Cart::count() === 0) {
+            return redirect()->back()->withErrors(['error' => 'You cannot create an invoice with zero items in the cart.']);
+        }
+
         return view('pos.create-invoice', [
             'customer' => $customer,
             'content' => $content
@@ -104,3 +124,4 @@ class PosController extends Controller
         ]);
     }
 }
+
