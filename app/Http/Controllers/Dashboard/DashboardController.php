@@ -12,9 +12,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Total Paid and Due Amount
-        $total_paid = Order::sum('pay');
-        $total_due = Order::sum('due');
+        // Total Paid and Due Amount (formatted with commas and two decimal places)
+        $total_paid = number_format(Order::sum('pay'), 2, '.', ',');
+        $total_due = number_format(Order::sum('due'), 2, '.', ',');
 
         // Count complete, pending, and cancelled orders
         $complete_orders_count = Order::where('order_status', 'complete')->count();
@@ -67,4 +67,3 @@ class DashboardController extends Controller
         }
     }
 }
-

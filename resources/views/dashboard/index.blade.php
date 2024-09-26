@@ -8,12 +8,12 @@
                 <div class="alert text-white bg-success" role="alert">
                     <div class="iq-alert-text">{{ session('success') }}</div>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <i class="ri-close-line"></i>
+                        <i class="ri-close-line"></i>
                     </button>
                 </div>
             @endif
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4 mb-4">
             <div class="card card-transparent card-block card-stretch card-height border-none">
                 <div class="card-body p-0 mt-lg-2 mt-0">
                     <h3 class="mb-3">Hi {{ auth()->user()->name }}, {{ $greeting }}</h3>
@@ -21,9 +21,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-8 mb-4">
             <div class="row">
-                <div class="col-lg-4 col-md-4">
+                <div class="col-lg-4 col-md-4 mb-4">
                     <div class="card card-block card-stretch card-height">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-4 card-total-sale">
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4">
+                <div class="col-lg-4 col-md-4 mb-4">
                     <div class="card card-block card-stretch card-height">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-4 card-total-sale">
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4">
+                <div class="col-lg-4 col-md-4 mb-4">
                     <div class="card card-block card-stretch card-height">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-4 card-total-sale">
@@ -80,9 +80,9 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row mt-4 justify-content-center">
             <!-- Pie Chart for Order Status -->
-            <div class="col-lg-4 d-flex justify-content-center">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card card-block card-stretch card-height">
                     <div class="card-body">
                         <h5 class="card-title text-center">Order Status</h5>
@@ -91,7 +91,7 @@
                 </div>
             </div>
             <!-- Line Chart for Daily Sales -->
-            <div class="col-lg-4 d-flex justify-content-center">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card card-block card-stretch card-height">
                     <div class="card-body">
                         <h5 class="card-title text-center">Daily Sales</h5>
@@ -101,7 +101,7 @@
             </div>
 
             <!-- Completed Orders List -->
-            <div class="col-lg-4 d-flex justify-content-center">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card card-block card-stretch card-height">
                     <div class="card-body">
                         <h5 class="card-title text-center">Completed Orders</h5>
@@ -120,9 +120,8 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
+
     </div>
 </div>
 @endsection

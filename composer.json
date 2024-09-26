@@ -10,7 +10,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "hardevine/shoppingcart": "^3.2",
         "haruncpi/laravel-id-generator": "^1.1",
-        "intervention/image": "^2.7",
+        "intervention/image": "2.7",
         "itsgoingd/clockwork": "^5.1",
         "kyslik/column-sortable": "^6.5",
         "laravel/framework": "^10.0",
