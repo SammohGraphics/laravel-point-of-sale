@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('product_name');
             $table->integer('category_id');
             $table->integer('supplier_id');
-            $table->string('product_code')->nullable();
+            if (!Schema::hasColumn('products', 'product_code')) {
+                $table->string('product_code')->nullable();
+            }
             $table->string('product_garage')->nullable();
             $table->string('product_image')->nullable();
             $table->integer('product_store')->nullable();
