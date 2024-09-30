@@ -56,11 +56,11 @@ class DashboardController extends Controller
 
     protected function getGreeting($hour)
     {
-        if ($hour >= 5 && $hour < 12) {
+        if ($hour >= 5 && $hour < 11) {
             return 'Good Morning';
-        } elseif ($hour >= 12 && $hour < 17) {
+        } elseif ($hour >= 12 && $hour < 15) {
             return 'Good Afternoon';
-        } elseif ($hour >= 17 && $hour < 22) {
+        } elseif ($hour >= 15 && $hour < 19) {
             return 'Good Evening';
         } else {
             return 'Good Night';
